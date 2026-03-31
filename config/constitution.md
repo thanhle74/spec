@@ -46,9 +46,9 @@
 
 ## 3. Cấu trúc Module bắt buộc
 
-Mỗi module NullTraceX phải có tối thiểu:
+Mỗi module <Vendor> phải có tối thiểu:
 ```
-app/code/NullTraceX/<TênModule>/
+app/code/<Vendor>/<TênModule>/
 ├── registration.php
 ├── etc/
 │   └── module.xml
@@ -65,6 +65,11 @@ Chỉ tính năng nào cần, mới thêm folder tương ứng. Không tạo fol
 - Comment giải thích logic: tiếng Việt hoặc tiếng Anh đều được
 - Commit message: tiếng Anh
 - Spec, plan, task: tiếng Việt
+- **Document Tags (PHPDoc):**
+    - `@api`: Bắt buộc cho mọi Public Interface (`Api/`).
+    - `@since`: Bắt buộc cho Interface và Method trong Api folder (ví dụ: `@since 1.0.0`).
+    - `@inheritdoc`: Dùng trong class thực thi (Implementation) để kế thừa docblock từ interface.
+    - **Lưu ý đặc biệt cho Web API:** Mọi `@param` và `@return` trong Public Interface phải sử dụng **Fully Qualified Class Name** (ví dụ: `\Vendor\Module\Api\Data\MyInterface` thay vì `Data\MyInterface`) để hệ thống REST/SOAP tự động nhận diện đúng kiểu dữ liệu.
 
 ---
 
@@ -79,7 +84,7 @@ Chỉ tính năng nào cần, mới thêm folder tương ứng. Không tạo fol
 ## 6. Database
 
 - Dùng Declarative Schema (`db_schema.xml`), KHÔNG dùng InstallSchema/UpgradeSchema
-- Đặt tên bảng: `nulltracex_<module>_<entity>` (ví dụ: `nulltracex_employee_record`)
+- Đặt tên bảng: `<vendor>_<module>_<entity>` (ví dụ: `<vendor>_employee_record`)
 - Tạo Data Patch cho dữ liệu mặc định, KHÔNG dùng InstallData/UpgradeData
 - Index cho các column thường query
 

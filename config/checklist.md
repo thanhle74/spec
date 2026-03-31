@@ -19,13 +19,13 @@ Tham khảo từ: constitution.md, magento-patterns.md
 - [ ] Có `registration.php`
 - [ ] Có `etc/module.xml` với sequence đúng
 - [ ] Không có folder rỗng
-- [ ] Namespace đúng: `NullTraceX\<Module>`
+- [ ] Namespace đúng: `<Vendor>\<Module>`
 
 ## 3. Database
 
 - [ ] Dùng `db_schema.xml`, không dùng InstallSchema
 - [ ] Có `db_schema_whitelist.json`
-- [ ] Tên bảng theo convention: `nulltracex_<module>_<entity>`
+- [ ] Tên bảng theo convention: `<vendor>_<module>_<entity>`
 - [ ] Data Patch cho dữ liệu mặc định
 
 ## 4. API / Service Contract
@@ -45,13 +45,13 @@ Tham khảo từ: constitution.md, magento-patterns.md
 ## 6. Plugin / Observer
 
 - [ ] Plugin có sortOrder
-- [ ] Plugin tên đúng convention: `nulltracex_<module>_<mô_tả>`
+- [ ] Plugin tên đúng convention: `<vendor>_<module>_<mô_tả>`
 - [ ] Hạn chế dùng `around` plugin
 - [ ] Observer chỉ làm 1 việc
 
 ## 7. Config
 
-- [ ] Section trong system.xml: `nulltracex_<module>`
+- [ ] Section trong system.xml: `<vendor>_<module>`
 - [ ] Có giá trị mặc định trong `config.xml`
 - [ ] Đọc config qua Helper/Config model
 

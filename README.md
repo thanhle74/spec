@@ -37,6 +37,7 @@
 ## Cách nói chuyện với AI
 
 ### Lần đầu (hoặc khi bắt đầu feature mới):
+
 ```
 Đọc file .spec/config/constitution.md và .spec/config/magento-patterns.md
 Sau đó đọc spec tại .spec/specs/<tên-feature>.md
@@ -44,6 +45,7 @@ Xác nhận bạn hiểu đúng requirements trước khi làm gì.
 ```
 
 ### Khi đã có plan và tasks:
+
 ```
 Đọc .spec/config/constitution.md
 Đọc .spec/tasks/<tên-feature>.md
@@ -51,7 +53,10 @@ Implement task số <N>.
 ```
 
 ### Khi cần kiểm tra:
+
 ```
 Đọc .spec/config/checklist.md
 Kiểm tra code của module <tên-module> theo checklist.
 ```
+
+"Dựa theo quy chuẩn trong thư mục .spec/, hãy tạo data patch..."
