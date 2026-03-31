@@ -50,11 +50,30 @@ $salableQty = $this->getProductSalableQty->execute($sku, $stockId);
 
 ---
 
-## 4. Lưu ý về Reservations
+## 4. Reservations (Giữ chỗ tồn kho)
 
-Khi một đơn hàng được đặt, Magento **không** trừ ngay vào cột `qty` trong bảng Source. Thay vào đó, nó tạo một bản ghi trong bảng `inventory_reservation`.
-- Sau khi đơn hàng được Ship (Shipment created), bản ghi reservation sẽ được xóa và `qty` thực tế mới bị trừ.
-- Điều này giúp tránh việc "Lock" bảng dữ liệu kho khi có quá nhiều người mua cùng lúc.
+Khi đơn hàng được đặt, Magento tạo bản ghi "Giữ chỗ" (Reservation) thay vì trừ thẳng vào kho vật lý.
+
+- **Dữ liệu:** Lưu trong bảng `inventory_reservation`.
+- **Cơ chế:** Append-only (Luôn thêm mới, không bao giờ UPDATE bản ghi cũ).
+- **Phép tính:** `Salable Qty = Stock Qty + Sum(Reservations)`.
+- **Hoàn tất:** Khi tạo Shipment, Reservation sẽ được xóa/bù trừ và kho vật lý mới bị trừ thực tế.
+
+---
+
+## 5. Source Selection Algorithms (SSA - Thuật toán chọn kho)
+
+Dùng để quyết định lấy hàng từ kho (Source) nào cho Shipment.
+
+- **Priority Algorithm:** Ưu tiên kho có độ ưu tiên cao nhất đã thiết lập.
+- **Distance Priority:** Ưu tiên kho có khoảng cách địa lý gần khách hàng nhất (dựa trên Google Maps API hoặc dữ liệu Offline).
+- **Custom SSA:** Implement `Magento\InventorySourceSelectionApi\Api\SourceSelectionInterface`.
+
+```php
+public function execute(InventoryRequestInterface $inventoryRequest): SourceSelectionResultInterface {
+    // Thuật toán tùy biến để chọn Source tối ưu nhất
+}
+```
 
 ---
 
@@ -62,4 +81,5 @@ Khi một đơn hàng được đặt, Magento **không** trừ ngay vào cột 
 
 - Service Contracts: xem [service-contracts.md](./service-contracts.md)
 - Web API: xem [web-api.md](./web-api.md)
+- Framework Utilities: xem [framework-utilities.md](./framework-utilities.md)
 - Quy tắc chung: xem [../constitution.md](../constitution.md)

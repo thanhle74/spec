@@ -4,7 +4,41 @@ Nguồn: https://developer.adobe.com/commerce/php/development/components/code-ge
 
 ---
 
-## 1. Nguyên lý Dependency Injection (DI)
+## 1. Phân vùng cấu hình (DI Areas)
+
+Luôn đặt `di.xml` vào đúng thư mục để tối ưu hiệu suất và tránh xung đột logic.
+
+- **`etc/di.xml`**: Cấu hình chung cho mọi khu vực (Global).
+- **`etc/frontend/di.xml`**: Ưu tiên các xử lý cho khách hàng (Storefront).
+- **`etc/adminhtml/di.xml`**: Ưu tiên logic xử lý cho Admin.
+- **`etc/webapi_rest/di.xml`**: Dùng cho REST API (vd: thay đổi logic Auth).
+- **`etc/graphql/di.xml`**: Dùng cho GraphQL.
+
+---
+
+## 2. Virtual Types & Constructor Injection
+
+Dùng `virtualType` để tạo ra các "biến thể" của một class gốc mà không cần tạo file PHP mới.
+
+```xml
+<!-- Tạo một logger riêng cho module -->
+<virtualType name="MyModuleLogger" type="Magento\Framework\Logger\Monolog">
+    <arguments>
+        <argument name="name" xsi:type="string">my_module_log</argument>
+    </arguments>
+</virtualType>
+
+<!-- Inject Logger ảo này vào class thật -->
+<type name="Vendor\Module\Model\Processor">
+    <arguments>
+        <argument name="logger" xsi:type="object">MyModuleLogger</argument>
+    </arguments>
+</type>
+```
+
+---
+
+## 3. Nguyên lý Dependency Injection (DI)
 
 Magento sử dụng DI để giảm sự phụ thuộc giữa các class (loose coupling). Bạn khai báo Interface trong constructor, và Magento sẽ "bơm" (inject) implementation thực tế vào thông qua cấu hình trong `di.xml`.
 

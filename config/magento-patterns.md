@@ -196,6 +196,33 @@ etc/
 
 ---
 
+## 19. Cấu trúc thư mục Module chuẩn
+
+```text
+Vendor/Module/
+├── etc/                # Cấu hình XML (di.xml, module.xml, events.xml, routes.xml)
+├── Api/                # Service Contracts (Interfaces)
+├── Model/              # Business Logic & Data Models
+├── Controller/         # Web Actions
+├── Block/              # View Logic (Deprecated - dùng ViewModels thay thế)
+├── ViewModel/          # Modern Frontend Logic
+├── Plugin/             # Interceptors
+├── Observer/           # Event Handlers
+├── Setup/              # Patch dữ liệu & Recurring Scripts
+├── view/               # Frontend (layout, templates, web)
+└── registration.php    # Đăng ký module với hệ thống
+```
+
+---
+
+## 20. Vòng đời Module (Recurring Scripts)
+
+Dùng `Magento\Framework\Setup\InstallSchemaInterface` (nhưng đặt trong class `Recurring`) để thực thi code mỗi khi chạy lệnh `bin/magento setup:upgrade`.
+
+- **Mục đích:** Cập nhật metadata, dọn dẹp cache đặc thù, hoặc đồng bộ dữ liệu động sau khi schema đã ổn định.
+
+---
+
 ## Liên kết
 
 - Quy tắc chung: xem [constitution.md](./constitution.md)
@@ -221,3 +248,11 @@ etc/
 - Tham khảo Các mẫu kiến trúc (Adapter/Proxy/Factory): xem [architectural-patterns.md](./references/architectural-patterns.md)
 - Tham khảo View Models (Frontend Logic): xem [frontend-view-models.md](./references/frontend-view-models.md)
 - Tham khảo Khuyến mãi sản phẩm (Price Rules): xem [catalog-price-rules.md](./references/catalog-price-rules.md)
+- Tham khảo Tích hợp thanh toán (Payment Gateway): xem [payment-gateway.md](./references/payment-gateway.md)
+- Tham khảo Lưu thẻ & Token (Vault): xem [payment-vault.md](./references/payment-vault.md)
+- Tham khảo Quản lý cấu hình (Config & Security): xem [configuration-management.md](./references/configuration-management.md)
+- Tham khảo Bảo mật hệ thống (Security): xem [security-best-practices.md](./references/security-best-practices.md)
+- Tham khảo Tiện ích hệ thống (Utilities): xem [framework-utilities.md](./references/framework-utilities.md)
+- Tham khảo Phiên bản & Tương thích (SemVer): xem [versioning-compatibility.md](./references/versioning-compatibility.md)
+- Tham khảo Quản lý Cache: xem [cache-management.md](./references/cache-management.md)
+- Tham khảo Báo cáo nâng cao: xem [advanced-reporting.md](./references/advanced-reporting.md)

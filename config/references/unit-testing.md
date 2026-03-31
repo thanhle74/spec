@@ -69,6 +69,27 @@ $model = $this->objectManagerHelper->getObject(
 
 ---
 
+## 3. Các cấp độ kiểm thử nâng cao
+
+Ngoài Unit Test, để đạt chuẩn Adobe (Marketplace), cần thực hiện:
+
+- **Integration Tests:** Chạy trong môi trường có Database thật. Dùng để kiểm tra `di.xml` và các quan hệ giữa các bảng.
+- **MFTF (Functional):** Dùng XML để mô tả các hành động của người dùng trên trình duyệt.
+- **Static Analysis:**
+  - `phpcs`: Kiểm tra chuẩn coding standard của Magento.
+  - `phpmd`: Kiểm tra độ phức tạp của code (Mess Detector).
+
+---
+
+## 4. Quy trình xác thực (Validation)
+
+Trước khi coi là "Hoàn thành" (Done), AI và Developer nên:
+1. Chạy `bin/magento dev:tests:run unit`.
+2. Kiểm tra `etc/csp_whitelist.xml` nếu có dùng script ngoài.
+3. Đảm bảo không có lỗi `BIC` (Backward Incompatible).
+
+---
+
 ## Liên kết
 
 - DI & Codegen: xem [di-codegen.md](./di-codegen.md)

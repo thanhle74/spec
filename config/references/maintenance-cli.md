@@ -50,6 +50,47 @@ bin/magento cache:flush
 
 ---
 
+## 3. Tạo lệnh CLI tùy biến (Custom Command)
+
+Dùng để tạo các script import, export hoặc xử lý dữ liệu hàng loạt.
+
+### Bước 1: Tạo class Command
+```php
+namespace Vendor\Module\Console\Command;
+
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
+
+class SyncData extends Command {
+    protected function configure() {
+        $this->setName('vendor:sync:data')
+             ->setDescription('Đồng bộ dữ liệu từ API bên thứ ba');
+        parent::configure();
+    }
+
+    protected function execute(InputInterface $input, OutputInterface $output): int {
+        $output->writeln('<info>Bắt đầu đồng bộ...</info>');
+        // Logic xử lý...
+        $output->writeln('<info>Hoàn tất!</info>');
+        return 0; // Success
+    }
+}
+```
+
+### Bước 2: Đăng ký trong di.xml
+```xml
+<type name="Magento\Framework\Console\CommandListInterface">
+    <arguments>
+        <argument name="commands" xsi:type="array">
+            <item name="vendor_sync_data" xsi:type="object">Vendor\Module\Console\Command\SyncData</item>
+        </argument>
+    </arguments>
+</type>
+```
+
+---
+
 ## Liên kết
 
 - DI & Codegen: xem [di-codegen.md](./di-codegen.md)
