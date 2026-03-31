@@ -90,6 +90,32 @@ Hãy chỉ gán những trường được phép (Whitelist) hoặc dùng Servic
 
 ---
 
+## 6. Mã hóa mật khẩu (Argon2ID)
+
+Magento 2.4.4+ sử dụng Argon2ID (chuẩn hiện đại nhất) để băm mật khẩu. 
+- Không bao giờ lưu mật khẩu dưới dạng plain text hoặc các hàm băm yếu (md5, sha1).
+
+---
+
+## 7. Chống Clickjacking & Cache Poisoning
+
+### X-Frame-Options
+Ngăn chặn việc nhúng website vào iframe trên trang web khác.
+- Cấu hình trong `app/etc/env.php`: `'x-frame-options' => 'SAMEORIGIN'`.
+
+### Cache Poisoning
+Ngăn chặn thao túng bộ nhớ đệm qua Header giả mạo.
+- Loại bỏ các Header nhạy cảm (`X-Rewrite-Url`, `X-Original-Url`) tại tầng Web Server (Nginx/Apache) trước khi gửi tới Varnish.
+
+---
+
+## 8. Bảo mật thực thi (Cron & CLI)
+
+- **Cron Security:** Chặn truy cập công khai vào các file cron qua HTTP. Chỉ cho phép chạy qua Linux Crontab (CLI).
+- **Security.txt:** Triển khai file `.well-known/security.txt` để công bố chính sách báo lỗi bảo mật của dự án.
+
+---
+
 ## Liên kết
 
 - Configuration Management: xem [configuration-management.md](./configuration-management.md)

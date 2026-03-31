@@ -124,6 +124,111 @@ this.myData = customerData.get('my-custom-data');
 
 ---
 
+## 7. Cấu hình Redis & Valkey (Backends)
+
+Dùng cho môi trường Production để đạt hiệu suất tối đa.
+
+### Redis (Mặc định)
+- Backend: `Magento\Framework\Cache\Backend\Redis`
+- Thông số quan trọng: `compress_data => 1`, `maxmemory-policy => volatile-lru`.
+
+### Valkey (Khuyên dùng từ 2.4.8+)
+- Backend: `Magento\Framework\Cache\Backend\Valkey`
+- **Tính năng Preload:** Giúp tải trước các key cấu hình quan trọng.
+
+**Cấu hình trong `env.php`**:
+```php
+'cache' => [
+    'frontend' => [
+        'default' => [
+            'backend' => 'Magento\Framework\Cache\Backend\Valkey',
+            'backend_options' => [
+                'server' => '127.0.0.1', 'database' => '0', 'port' => '6379',
+                'compress_data' => '1',
+                'preload_keys' => [
+                    'EAV_ENTITY_TYPES', 'GLOBAL_PLUGIN_LIST', 'DB_IS_UP_TO_DATE', 'SYSTEM_DEFAULT'
+                ]
+            ]
+        ],
+        'page_cache' => [
+            'backend' => 'Magento\Framework\Cache\Backend\Valkey',
+            'backend_options' => [
+                'server' => '127.0.0.1', 'database' => '1', 'port' => '6379',
+                'compress_data' => '1'
+            ]
+        ]
+    ]
+]
+```
+
+---
+
+## 8. Level 2 Cache (L2) & Stale Cache
+
+Dùng cho môi trường Multi-node hoặc website có lưu lượng truy cập cực lớn để tránh hiện tượng "Cache Stampede".
+
+### Level 2 Cache (L2)
+Sử dụng `RemoteSynchronizedCache` để làm "kho tổng" dùng chung cho toàn máy chủ, giảm tải cho Database chính.
+
+### Stale Cache (Dữ liệu cũ)
+Cho phép trả về dữ liệu hết hạn (`stale`) trong lúc tiến trình khác đang tạo lại cache mới. Khuyên dùng cho: `block_html`, `full_page`, `layout`, `translate`.
+
+**Cấu hình trong `app/etc/env.php`**:
+```php
+'cache' => [
+    'frontend' => [
+        'stale_cache_enabled' => [
+            'backend' => '\Magento\Framework\Cache\Backend\RemoteSynchronizedCache',
+            'backend_options' => [
+                'remote_backend' => '\Magento\Framework\Cache\Backend\Redis',
+                'remote_backend_options' => [
+                    'server' => 'localhost',
+                    'database' => '1',
+                    'port' => '6379'
+                ],
+                'use_stale_cache' => true // Bật cơ chế Stale
+            ],
+        ]
+    ],
+    'type' => [
+        'block_html' => ['frontend' => 'stale_cache_enabled'],
+        'full_page' => ['frontend' => 'stale_cache_enabled']
+    ]
+]
+```
+
+---
+
+## 8. Varnish Cache & ESI (Edge Side Includes)
+
+Varnish là giải pháp Page Cache khuyên dùng cho môi trường Production.
+
+### Cơ chế ESI
+Cho phép cache từng phần (partial caching) của một trang. Những thành phần có `ttl` riêng sẽ được Varnish xử lý độc lập.
+
+**Cách dùng trong Layout XML**:
+```xml
+<referenceContainer name="content">
+    <!-- Block này sẽ được Varnish cache độc lập trong 1 giờ (3600s) -->
+    <block class="Vendor\Module\Block\MyBlock" template="Vendor_Module::test.phtml" ttl="3600"/>
+</referenceContainer>
+```
+
+### Static Content Signing
+Tự động thêm version vào URL file tĩnh (JS, CSS) để Varnish có thể cache vô thời hạn. 
+- Bật trong Admin: `Stores > Configuration > Advanced > Developer > Static Files Settings`.
+
+---
+
+## 9. Kiểm tra trạng thái Cache (Headers)
+
+Luôn kiểm tra các Header sau để biết Cache có hoạt động hay không (chế độ Developer):
+- **X-Magento-Cache-Control**: `max-age=...` (Thời gian cache còn lại).
+- **X-Magento-Cache-Debug**: `HIT` hoặc `MISS` (Varnish/FPC có nhận hay không).
+- **X-Magento-Tags**: Danh sách nhãn thực thể có trong trang (Dùng để Purge).
+
+---
+
 ## Liên kết
 
 - Maintenance CLI: xem [maintenance-cli.md](./maintenance-cli.md)

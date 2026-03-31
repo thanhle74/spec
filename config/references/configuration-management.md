@@ -58,6 +58,76 @@ Bạn có thể ghi đè bất kỳ giá trị nào bằng biến môi trường
 
 ---
 
+## 5. Trình phân tích hiệu năng (MAGE_PROFILER)
+
+Dùng để soi thời gian thực thi của từng thành phần trên trang web.
+
+**Cấu hình trong Nginx**:
+```nginx
+server {
+    ...
+    # Bật hiển thị bảng thống kê HTML ở cuối trang
+    set $MAGE_PROFILER 1;
+    
+    # Hoặc bật Dependency Graph (Biểu đồ phụ thuộc)
+    # set $MAGE_PROFILER 2;
+    ...
+}
+```
+
+**Cấu hình trong CLI**:
+- `bin/magento dev:profiler:enable html`: Bật profiler HTML. (Magento 2.4.8+)
+- `bin/magento dev:profiler:disable`: Tắt profiler.
+
+---
+
+## 5. Quản lý Session (Session Storage)
+
+Lưu phiên làm việc vào bộ nhớ ngoài để hỗ trợ Multi-server.
+
+**Cấu hình Redis Session**:
+```php
+'session' => [
+    'save' => 'redis',
+    'redis' => [
+        'host' => '127.0.0.1',
+        'port' => '6379',
+        'database' => '2', // Luôn dùng DB riêng cho Session
+        'log_level' => '4',
+        'max_concurrency' => '6',
+        'break_after_frontend' => '5',
+        'failover_addresses' => '',
+        'compression_threshold' => '2048',
+        'compression_lib' => 'gzip'
+    ]
+]
+```
+
+---
+
+## 6. Chia tách Database (Split DB)
+
+Cho phép chạy nhiều kết nối DB cho Main, Checkout và Sales.
+
+**Cấu hình trong `env.php`**:
+```php
+'db' => [
+    'connection' => [
+        'default' => [ ... ],
+        'checkout' => [ 'host' => '...', 'dbname' => 'magento_quote', ... ],
+        'sales' => [ 'host' => '...', 'dbname' => 'magento_sales', ... ]
+    ],
+    'table_prefix' => ''
+],
+'resource' => [
+    'default_setup' => [ 'connection' => 'default' ],
+    'checkout' => [ 'connection' => 'checkout' ],
+    'sales' => [ 'connection' => 'sales' ]
+]
+```
+
+---
+
 ## Liên kết
 
 - Maintenance CLI: xem [maintenance-cli.md](./maintenance-cli.md)

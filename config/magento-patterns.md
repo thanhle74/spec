@@ -256,3 +256,8 @@ Dùng `Magento\Framework\Setup\InstallSchemaInterface` (nhưng đặt trong clas
 - Tham khảo Phiên bản & Tương thích (SemVer): xem [versioning-compatibility.md](./references/versioning-compatibility.md)
 - Tham khảo Quản lý Cache: xem [cache-management.md](./references/cache-management.md)
 - Tham khảo Báo cáo nâng cao: xem [advanced-reporting.md](./references/advanced-reporting.md)
+- Tham khảo Lập lịch tác vụ (Cron Jobs): xem [cron-jobs.md](./references/cron-jobs.md)
+- Tham khảo Hệ thống Ghi nhật ký (Logging): xem [logging.md](./references/logging.md)
+- Tham khảo Quản lý Đa website (Multi-site): xem [multi-site-management.md](./references/multi-site-management.md)
+- Tham khảo Tìm kiếm & Điều hướng (Search): xem [search-navigation.md](./references/search-navigation.md)
+- Tham khảo Lưu trữ & Phương tiện (Storage): xem [storage-media.md](./references/storage-media.md)

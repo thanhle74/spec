@@ -19,15 +19,23 @@
 - Return type bắt buộc cho mọi method (kể cả `: void`)
 - Docblock chỉ khi cần giải thích logic phức tạp, không lặp lại type hint
 
-### Nguyên tắc thiết kế
-- SOLID bắt buộc:
-  - S: Mỗi class chỉ làm 1 việc
-  - O: Mở rộng bằng plugin/event, không sửa core
-  - L: Subclass phải thay thế được parent
-  - I: Interface nhỏ, cụ thể, không ép implement method thừa
-  - D: Inject dependency qua constructor, không `new` trực tiếp
-- DI (Dependency Injection) qua `di.xml`, KHÔNG dùng ObjectManager trực tiếp
-- Composition hơn inheritance
+### Nguyên tắc thiết kế (Technical Guidelines)
+- **SOLID bắt buộc:**
+  - S: Mỗi class chỉ làm 1 việc.
+  - O: Mở rộng bằng plugin/event, không sửa core.
+  - L: Subclass phải thay thế được parent.
+  - I: Interface nhỏ, cụ thể, không ép implement method thừa.
+  - D: Inject dependency qua constructor, không `new` trực tiếp (trừ DTO/Exceptions).
+- **Object Readiness:** Object phải sẵn sàng sử dụng ngay sau khi `__construct`. Không dùng hàm `init()` hoặc `load()` công khai.
+- **Constructor Logic:** Chỉ chứa phép gán (assignment) và kiểm soát tham số. Không thực hiện logic nghiệp vụ hay dispatch Event trong constructor.
+- **Exceptions (Ngoại lệ):**
+  - Không ném generic `\Exception`. Luôn dùng loại cụ thể (vd: `LocalizedException`).
+  - Không được `catch` ngoại lệ ngay trong chính hàm vừa ném nó ra.
+  - Không dùng Exception để điều khiển luồng logic nghiệp vụ.
+  - Khi dùng tài nguyên (file, stream), bắt buộc có `finally` để giải phóng.
+- **DI (Dependency Injection):** Qua `di.xml`, KHÔNG dùng ObjectManager trực tiếp.
+- **Composition hơn inheritance.**
+- **::class Keyword:** Luôn dùng `ClassName::class` thay vì dùng chuỗi string cho tên class.
 
 ---
 

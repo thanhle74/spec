@@ -91,6 +91,32 @@ class SyncData extends Command {
 
 ---
 
+## 4. Chế độ Vận hành (Application Modes)
+
+Magento có 3 chế độ vận hành chính, ảnh hưởng trực tiếp tới hiệu năng và bảo mật.
+
+- **Developer:** Hiện lỗi trực tiếp, không cache file tĩnh. Dùng khi phát triển.
+- **Production:** Tốc độ tối đa, ẩn lỗi, bắt buộc phải biên dịch trước (Compile/Deploy).
+- **Default:** Chế độ mặc định của hệ thống (không tối ưu).
+
+**Lệnh chuyển chế độ**:
+- `bin/magento deploy:mode:show`: Xem chế độ hiện tại.
+- `bin/magento deploy:mode:set developer`: Chuyển sang Developer.
+- `bin/magento deploy:mode:set production`: Chuyển sang Production (mất vài phút).
+
+---
+
+## 5. Chế độ Bảo trì (Maintenance)
+
+Dùng khi nâng cấp hệ thống để tránh khách hàng gặp lỗi.
+
+- `bin/magento maintenance:enable`: Bật bảo trì (chặn tất cả).
+- `bin/magento maintenance:enable --ip=123.123.123.123`: Chỉ cho phép IP này truy cập để sửa lỗi.
+- `bin/magento maintenance:disable`: Tắt bảo trì.
+- `bin/magento maintenance:status`: Kiểm tra trạng thái.
+
+---
+
 ## Liên kết
 
 - DI & Codegen: xem [di-codegen.md](./di-codegen.md)
