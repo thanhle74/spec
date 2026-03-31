@@ -101,7 +101,45 @@ Một Repository chuẩn cho một Entity (ví dụ: `Employee`) bắt buộc ph
 
 ---
 
-## 7. Search Results Interface (Kết quả tìm kiếm)
+## 7. Thực thi getList() với CollectionProcessor
+
+Đây là cách hiện đại nhất (Modern way) để viết hàm `getList`.
+
+**1. PHP Implementation:**
+```php
+public function getList(SearchCriteriaInterface $searchCriteria)
+{
+    $collection = $this->collectionFactory->create();
+    
+    // Tự động áp dụng Filter, Sort, Paging từ SearchCriteria vào Collection
+    $this->collectionProcessor->process($searchCriteria, $collection);
+    
+    $searchResults = $this->searchResultsFactory->create();
+    $searchResults->setSearchCriteria($searchCriteria);
+    $searchResults->setItems($collection->getItems());
+    $searchResults->setTotalCount($collection->getSize());
+    
+    return $searchResults;
+}
+```
+
+**2. Cấu hình di.xml (Field Mapping):**
+Mặc định dùng `Magento\Framework\Api\SearchCriteria\CollectionProcessor`. Nếu cần ánh xạ trường API sang DB column, hãy dùng `virtualType`:
+```xml
+<virtualType name="MyModuleSearchCriteriaCollectionProcessor" type="Magento\Framework\Api\SearchCriteria\CollectionProcessor">
+    <arguments>
+        <argument name="processors" xsi:type="array">
+            <item name="filters" xsi:type="object">Magento\Framework\Api\SearchCriteria\CollectionProcessor\FilterProcessor</item>
+            <item name="sorting" xsi:type="object">Magento\Framework\Api\SearchCriteria\CollectionProcessor\SortingProcessor</item>
+            <item name="pagination" xsi:type="object">Magento\Framework\Api\SearchCriteria\CollectionProcessor\PaginationProcessor</item>
+        </argument>
+    </arguments>
+</virtualType>
+```
+
+---
+
+## 8. Search Results Interface (Kết quả tìm kiếm)
 
 Nằm trong `Api/Data/`. Giúp type-hinting chính xác danh sách các thực thể trả về từ `getList()`.
 
@@ -124,7 +162,7 @@ interface EmployeeSearchResultsInterface extends SearchResultsInterface
 
 ---
 
-## 8. Management & Metadata Interfaces
+## 9. Management & Metadata Interfaces
 
 - **Management Interface:** Dùng cho logic nghiệp vụ KHÔNG liên quan đến CRUD entity.
     - Ví dụ: `AccountManagementInterface::changePassword()`, `ShippingManagementInterface::estimateRate()`.

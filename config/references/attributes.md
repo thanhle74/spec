@@ -76,6 +76,33 @@ class AddSecondaryPhoneAttribute implements DataPatchInterface
 }
 ```
 
+### Thêm Product EAV Attribute
+Tương tự Customer, nhưng dùng `EavSetupFactory`. Các thuộc tính Product có nhiều option hơn như `is_filterable`, `is_searchable`.
+
+```php
+$eavSetup = $this->eavSetupFactory->create(['setup' => $this->moduleDataSetup]);
+$eavSetup->addAttribute(
+    \Magento\Catalog\Model\Product::ENTITY,
+    'brand_id',
+    [
+        'type' => 'int',
+        'label' => 'Thương hiệu',
+        'input' => 'select',
+        'source' => \Vendor\Module\Model\Source\Brand::class,
+        'required' => false,
+        'global' => \Magento\Eav\Model\Entity\Attribute\ScopedAttributeInterface::SCOPE_GLOBAL,
+        'visible' => true,
+        'user_defined' => true,
+        'searchable' => true,
+        'filterable' => true,
+        'comparable' => false,
+        'visible_on_front' => true,
+        'used_in_product_listing' => true,
+        'unique' => false,
+    ]
+);
+```
+
 ---
 
 ## 3. Extension Attributes
@@ -149,6 +176,16 @@ class OrderRepositoryPlugin
         
         $order->setExtensionAttributes($extensionAttributes);
         return $order;
+    }
+
+    public function afterGetList(
+        OrderRepositoryInterface $subject,
+        OrderSearchResultsInterface $searchResults
+    ): OrderSearchResultsInterface {
+        foreach ($searchResults->getItems() as $order) {
+            $this->afterGet($subject, $order);
+        }
+        return $searchResults;
     }
 }
 ```

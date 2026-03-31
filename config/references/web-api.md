@@ -65,6 +65,72 @@ Nằm trong thư mục `etc/webapi.xml`.
 
 ---
 
+## 5. Phân quyền (ACL Resource Accessibility)
+
+Trong `webapi.xml`, mỗi route phải khai báo ít nhất một `<resource>`.
+
+### Các giá trị đặc biệt:
+- **`anonymous`**: Cho phép truy cập công khai (Guest). Dùng cho các tính năng như Đăng ký khách hàng, Xem sản phẩm.
+- **`self`**: Cho phép khách hàng đã đăng nhập truy cập dữ liệu của chính mình.
+- **`Magento_Module::resource`**: Chỉ cho phép Admin hoặc Integration có quyền tương ứng trong `acl.xml`.
+
+### Ví dụ phân quyền nâng cao:
+```xml
+<!-- Cho khách hàng tự cập nhật profile của mình -->
+<route url="/V1/customers/me" method="PUT">
+    <service class="Magento\Customer\Api\CustomerRepositoryInterface" method="save"/>
+    <resources>
+        <resource ref="self"/>
+    </resources>
+    <data>
+        <parameter name="customer.id" force="true">%customer_id%</parameter>
+    </data>
+</route>
+
+<!-- Cho Admin có quyền manage mới được sửa thông tin khách hàng bất kỳ -->
+<route url="/V1/customers/:customerId" method="PUT">
+    <service class="Magento\Customer\Api\CustomerRepositoryInterface" method="save"/>
+    <resources>
+        <resource ref="Magento_Customer::manage"/>
+    </resources>
+</route>
+```
+
+---
+
+## 6. Custom Routes & Aliases (Asynchronous API)
+
+Bạn có thể đặt bí danh cho các route để URL ngắn gọn và dễ hiểu hơn thông qua file `etc/webapi_async.xml`.
+
+### Quy tắc:
+- Chỉ áp dụng cho các route **không có tham số biến** (ví dụ: không có `:id`).
+- Giúp che giấu cấu trúc URL thực tế của hệ thống.
+
+### Ví dụ:
+```xml
+<services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_WebapiAsync:etc/webapi_async.xsd">
+    <!-- Gọi POST /createWidget sẽ tương đương POST /V1/widgets -->
+    <route url="V1/widgets" method="POST" alias="createWidget" />
+</services>
+```
+
+---
+
+## 7. Request Processors (Sync vs Async vs Bulk)
+
+Magento phân loại luồng xử lý API dựa trên URL. Hiểu điều này giúp tối ưu hiệu suất tích hợp.
+
+| Loại | URL Pattern | Cơ chế | Sử dụng khi |
+|------|-------------|--------|-------------|
+| **Sync** | `/V1/...` | Chạy trực tiếp, trả kết quả ngay. | Thao tác đơn lẻ, cần kết quả tức thì. |
+| **Async** | `/async/V1/...` | Đưa vào Queue (RabbitMQ/DB), trả về `accepted`. | Các tác vụ nặng, không cần kết quả ngay. |
+| **Async Bulk**| `/async/bulk/V1/...` | Đưa mảng dữ liệu lớn vào Queue. | Tích hợp dữ liệu lớn (Import hàng loạt). |
+
+### Lưu ý:
+Để sử dụng **Async/Bulk**, bạn phải bật và cấu hình **Message Queues** (bằng RabbitMQ hoặc Database) trong dự án.
+
+---
+
 ## Liên kết
 
 - Service Contracts: xem [service-contracts.md](./service-contracts.md)
