@@ -81,6 +81,18 @@ Tham khảo chi tiết: xem [network/message-queues.md](./references/network/mes
 
 ---
 
+## 8. UI Components & Data Sources
+
+Tham khảo chi tiết: xem [frontend/ui-components.md](./references/frontend/ui-components.md)
+
+### Quy tắc:
+- Sử dụng **Admin UI Components** (`listing`, `form`) cho toàn bộ giao diện quản trị mới.
+- Tách biệt logic dữ liệu vào **DataProvider** class.
+- Sử dụng **Settings** thay vì **Arguments** trong cấu hình XML nếu có thể.
+- Tận dụng **Template Literals** (`${ }`) để bind dữ liệu động trong JavaScript thay vì hardcode giá trị.
+
+---
+
 ## 7. Cấu trúc thư mục Module chuẩn
 
 ```text
@@ -91,6 +103,7 @@ Vendor/Module/
 ├── Controller/         # Web Actions
 ├── Block/              # View Logic (Deprecated)
 ├── ViewModel/          # Modern Frontend Logic
+├── Ui/                 # UI Data Providers & Component Logic
 ├── Plugin/             # Interceptors
 ├── Observer/           # Event Handlers
 ├── Setup/              # Patch dữ liệu
@@ -146,3 +159,4 @@ Vendor/Module/
 - [UI Components](./references/frontend/ui-components.md)
 - [View Models](./references/frontend/frontend-view-models.md)
 - [Admin UI Grid](./references/frontend/admin-ui-grid.md)
+

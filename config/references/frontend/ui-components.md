@@ -1,57 +1,125 @@
 # Tham khảo: Linh kiện giao diện (UI Components)
 
-Nguồn: https://developer.adobe.com/commerce/frontend-core/ui-components/
+Nguồn chính:
+- [UI Components Overview](https://developer.adobe.com/commerce/frontend-core/ui-components/)
+- [XML Declaration](https://developer.adobe.com/commerce/frontend-core/ui-components/concepts/xml-declaration)
+- [XML Configuration](https://developer.adobe.com/commerce/frontend-core/ui-components/concepts/xml-configuration)
+- [Data Sourcing](https://developer.adobe.com/commerce/frontend-core/ui-components/concepts/data-source)
 
 ---
 
-## 1. Kiến trúc UI Components
+## 1. Khai báo UI Components (XML Declaration)
 
-UI Components là một tập hợp các thành phần giao diện được xây dựng trên nền tảng **KnockoutJS** và **RequireJS**, kết nối với Backend thông qua file cấu hình XML.
+Cấu trúc khai báo UI Component gồm hai phần:
+1. **Layout XML (`layout/*.xml`):** Đưa component vào trang.
+2. **Component XML (`view/[area]/ui_component/*.xml`):** Cấu hình chi tiết component.
 
-### Luồng xử lý (Lifecycle)
-1. **Server-side:** 
-   - PHP gộp các file XML (`view/[area]/ui_component/*.xml`).
-   - Chuyển cấu hình XML thành định dạng JSON.
-   - Chèn JSON vào trang web qua thẻ `<script type="text/x-magento-init">` gọi đến `Magento_Ui/js/core/app`.
-2. **Client-side:**
-   - `layout.js` đọc JSON và khởi tạo (instantiate) các component JS tương ứng.
-   - KnockoutJS bind dữ liệu từ Component JS vào Template HTML.
+### Trong Layout XML
+Sử dụng thẻ `<uiComponent>` bên trong một container hoặc block:
 
----
+```xml
+<referenceContainer name="content">
+    <uiComponent name="instance_name"/>
+</referenceContainer>
+```
+Magento sẽ tìm file cấu hình tại: `<Module_Dir>/view/<area>/ui_component/instance_name.xml`.
 
-## 2. Các thuộc tính cơ bản (Basic Attributes)
-
-- `name`: Tên định danh duy nhất của component trong registry.
-- `component`: Đường dẫn tới file JavaScript xử lý logic (ví dụ: `Magento_Ui/js/form/form`).
-- `template`: Đường dẫn tới file HTML hiển thị (ví dụ: `ui/form/field`).
-- `provider`: Tên của `dataSource` component cung cấp dữ liệu.
-- `sortOrder`: Thứ tự hiển thị của component.
-- `displayArea`: Vùng hiển thị (giống như "hole" trong layout) để các component con nhảy vào.
+### Trong Component XML
+File này định nghĩa loại component (top node) và các thuộc tính/settings. Nếu nhiều module cùng định nghĩa một file name, Magento sẽ merge chúng lại.
 
 ---
 
-## 3. Các Component chính
+## 2. Cấu trúc Cấu hình XML (XML Configuration)
 
-- **Listing:** Dùng để hiển thị bảng dữ liệu (Grid) trong Admin.
-- **Form:** Dùng để tạo các biểu mẫu nhập liệu phức tạp.
-- **DataSource:** Thành phần trung gian kết nối với URL Backend để lấy/lưu dữ liệu.
+Magento hỗ trợ hai dạng cấu hình trong XML:
+
+### A. Settings (Khuyên dùng)
+Dạng cấu hình có cấu trúc chặt chẽ (strict structure), dễ đọc và bảo trì.
+```xml
+<settings>
+    <buttons>
+        <button name="save" class="Magento\Catalog\Block\Adminhtml\Category\Edit\SaveButton"/>
+    </buttons>
+    <namespace>category_form</namespace>
+    <dataScope>data</dataScope>
+</settings>
+```
+
+### B. Arguments (Dạng cũ/tự do)
+Dùng thẻ `<argument name="data">` để truyền mảng dữ liệu vào JS component.
+```xml
+<argument name="data" xsi:type="array">
+    <item name="js_config" xsi:type="array">
+        <item name="component" xsi:type="string">Magento_Ui/js/form/components/fieldset</item>
+    </item>
+    <item name="label" xsi:type="string" translate="true">Thông tin chung</item>
+</argument>
+```
+
+**Thứ tự ưu tiên:** Cấu hình trong `.js` file < `definition.xml` < XML của module.
 
 ---
 
-## 4. Quy tắc lập trình UI Components
+## 3. Nguồn cung cấp dữ liệu (Data Sourcing)
 
-### JavaScript (KnockoutJS)
-- Dùng `uiElement` làm class cơ sở.
-- Sử dụng `observables` để dữ liệu tự động cập nhật lên giao diện.
-- Luôn sử dụng `this._super()` khi ghi đè (override) các hàm mặc định.
+Data Source là cầu nối giữa Backend (PHP) và Frontend (JavaScript).
 
-### XML (Semantic UI)
-- Tránh viết logic trong XML, chỉ dùng để cấu hình các tham số hiển thị.
-- Sử dụng `etc/definition.xml` của module Magento_Ui để tham khảo các giá trị mặc định.
+### Khai báo DataSource trong XML
+```xml
+<dataSource name="example_data_source">
+    <argument name="dataProvider" xsi:type="configurableObject">
+        <argument name="class" xsi:type="string">Vendor\Module\Ui\DataProvider\MyDataProvider</argument>
+        <argument name="name" xsi:type="string">example_data_source</argument>
+        <argument name="primaryFieldName" xsi:type="string">entity_id</argument>
+        <argument name="requestFieldName" xsi:type="string">id</argument>
+    </argument>
+    <settings>
+        <validateUrl path="route/entity/validate"/>
+        <submitUrl path="route/entity/save"/>
+    </settings>
+</dataSource>
+```
+
+### PHP DataProvider Class
+Class này phải implement `DataProviderInterface` (thường kế thừa `AbstractDataProvider`).
+- `getData()`: Trả về mảng dữ liệu sẽ được chuyển thành JSON.
+
+### Đồng bộ hóa JS (Data Binding)
+Frontend sử dụng **Template Literals** (`${ }`) để truy xuất dữ liệu từ Provider.
+
+```javascript
+// Trong default config của JS Component
+defaults: {
+    imports: {
+        totalRecords: '${ $.provider }:data.totalRecords'
+    }
+}
+```
+Khi khởi tạo, `uiElement` sẽ tự động thực hiện:
+- `imports`: Lấy dữ liệu từ provider về component.
+- `exports`: Gửi dữ liệu từ component sang provider/component khác.
+- `links`: Kết nối hai chiều.
+
+---
+
+## 4. Các thuộc tính nền tảng (Base Properties)
+
+| Thuộc tính | Ý nghĩa |
+|------------|---------|
+| `component`| Đường dẫn RequireJS tới file `.js` (Model). |
+| `template` | Đường dẫn tới file `.html` (View). |
+| `provider` | Tên của `dataSource` component mà component này phụ thuộc. |
+| `sortOrder`| Thứ tự hiển thị. |
+| `displayArea`| Vùng render được định nghĩa trong component cha. |
 
 ---
 
 ## Liên kết
+- [Thư viện Linh kiện (Button, ActionsColumn, Bookmarks)](./ui-component-library.md)
+- [Thư viện JavaScript (uiClass, Element, Collection)](./ui-components-js-library.md)
+- [Cú pháp Template & Bindings](./ui-components-templates.md)
+- [PHP Modifiers (Metadata & Data Mod)](./ui-components-modifiers.md)
 - Quy tắc Magento Patterns: xem [../../magento-patterns.md](../../magento-patterns.md)
 - Web API & GraphQL: xem [../web-api.md](../web-api.md)
 - Quy tắc chung: xem [../../constitution.md](../../constitution.md)
+
