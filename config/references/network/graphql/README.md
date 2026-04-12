@@ -1,6 +1,6 @@
 # GraphQL — Web API (Adobe Commerce)
 
-Tài liệu gốc nằm trên **Adobe Developer — Commerce Web APIs → GraphQL**. Trong spec này, toàn bộ mục **Usage** (endpoint, token, cache, filter, response, headers, introspection, protected mutations, security, staging) gom tại [`usage.md`](./usage.md); **Reference** schema theo phiên bản tại [`reference.md`](./reference.md). Nhánh **Schema (guide)** — mục lục query/mutation theo domain trên Adobe: [`schema-attributes.md`](./schema-attributes.md) (**Attributes**), [`schema-cart.md`](./schema-cart.md) (**Cart** — queries §2–§4; mutations mục lục §5 chi tiết §6–§39; **interfaces** `CartItemInterface` §40), [`schema-catalog-service.md`](./schema-catalog-service.md) (**Catalog Service** + **`productSearch`** Live Search — §1–§7).
+Tài liệu gốc nằm trên **Adobe Developer — Commerce Web APIs → GraphQL**. Trong spec này, toàn bộ mục **Usage** (endpoint, token, cache, filter, response, headers, introspection, protected mutations, security, staging) gom tại [`usage.md`](./usage.md); **Reference** schema theo phiên bản tại [`reference.md`](./reference.md). Nhánh **Schema (guide)** — mục lục query/mutation theo domain trên Adobe: [`schema-attributes.md`](./schema-attributes.md) (**Attributes**), [`schema-cart.md`](./schema-cart.md) (**Cart** — queries §2–§4; mutations mục lục §5 chi tiết §6–§39; **interfaces** `CartItemInterface` §40), [`schema-catalog-service.md`](./schema-catalog-service.md) (**Catalog Service** + **`productSearch`** Live Search — §1–§7), [`schema-checkout.md`](./schema-checkout.md) (**Checkout** — queries §1–§6).
 
 Nhánh **Development** (định nghĩa `schema.graphqls`, resolver/batch resolver, mở rộng schema, Identity/cache tag, urlResolver tùy chỉnh, debug, exception, functional test): [`development.md`](./development.md).  
 **App Server / resolver stateless** (ràng buộc khi chạy long-lived PHP): [`../graphql-app-server.md`](../graphql-app-server.md) — bổ sung cho doc Adobe, không thay thế.
@@ -18,7 +18,7 @@ Nhánh **Development** (định nghĩa `schema.graphqls`, resolver/batch resolve
 | Chủ đề | Adobe (chính thức) | Trong `.spec` |
 |--------|-------------------|----------------|
 | Schema reference (queries/mutations theo bản) | [GraphQL API reference](https://developer.adobe.com/commerce/webapi/graphql/reference/) | [`reference.md`](./reference.md) |
-| Schema guide (mục lục theo domain: Attributes, Cart, Catalog Service, …) | [GraphQL schema](https://developer.adobe.com/commerce/webapi/graphql/schema/) | [`schema-attributes.md`](./schema-attributes.md) §1; [`schema-cart.md`](./schema-cart.md) §1; [`schema-catalog-service.md`](./schema-catalog-service.md) §1; nhóm khác → Adobe |
+| Schema guide (mục lục theo domain: Attributes, Cart, Catalog Service, Checkout, …) | [GraphQL schema](https://developer.adobe.com/commerce/webapi/graphql/schema/) | [`schema-attributes.md`](./schema-attributes.md) §1; [`schema-cart.md`](./schema-cart.md) §1; [`schema-catalog-service.md`](./schema-catalog-service.md) §1; [`schema-checkout.md`](./schema-checkout.md) §1; nhóm khác → Adobe |
 | Chạy query/mutation, endpoint, usage tổng quan | [GraphQL — Usage](https://developer.adobe.com/commerce/webapi/graphql/usage/) | [`usage.md`](./usage.md) §1 |
 | Authorization / token | [Authorization](https://developer.adobe.com/commerce/webapi/graphql/usage/authorization-tokens/) | [`usage.md`](./usage.md) §2 |
 | Caching | [Caching](https://developer.adobe.com/commerce/webapi/graphql/usage/caching/) | [`usage.md`](./usage.md) §3 |
@@ -146,6 +146,17 @@ Nhánh **Development** (định nghĩa `schema.graphqls`, resolver/batch resolve
 | `refineProduct` | [refineProduct](https://developer.adobe.com/commerce/webapi/graphql/schema/catalog-service/queries/refine-product/) | [`schema-catalog-service.md`](./schema-catalog-service.md) §6 |
 | `variants` | [variants](https://developer.adobe.com/commerce/webapi/graphql/schema/catalog-service/queries/product-variants/) | [`schema-catalog-service.md`](./schema-catalog-service.md) §7 |
 
+### Schema — Checkout (queries)
+
+| Chủ đề | Adobe (chính thức) | Trong `.spec` |
+|--------|-------------------|----------------|
+| Checkout (tổng quan) | [Checkout](https://developer.adobe.com/commerce/webapi/graphql/schema/checkout/) | [`schema-checkout.md`](./schema-checkout.md) §1 |
+| Danh sách queries | [Checkout queries](https://developer.adobe.com/commerce/webapi/graphql/schema/checkout/queries/) | [`schema-checkout.md`](./schema-checkout.md) §2 |
+| `checkoutAgreements` | [checkoutAgreements](https://developer.adobe.com/commerce/webapi/graphql/schema/checkout/queries/agreements/) | [`schema-checkout.md`](./schema-checkout.md) §3 |
+| `customerPaymentTokens` | [customerPaymentTokens](https://developer.adobe.com/commerce/webapi/graphql/schema/checkout/queries/customer-payment-tokens/) | [`schema-checkout.md`](./schema-checkout.md) §4 |
+| `getHostedProUrl` | [getHostedProUrl](https://developer.adobe.com/commerce/webapi/graphql/schema/checkout/queries/get-hosted-pro-url/) | [`schema-checkout.md`](./schema-checkout.md) §5 |
+| `getPayflowLinkToken` | [getPayflowLinkToken](https://developer.adobe.com/commerce/webapi/graphql/schema/checkout/queries/get-payflow-link-token/) | [`schema-checkout.md`](./schema-checkout.md) §6 |
+
 ---
 
 ## Liên kết
@@ -153,6 +164,7 @@ Nhánh **Development** (định nghĩa `schema.graphqls`, resolver/batch resolve
 - [GraphQL Guide (Adobe)](https://developer.adobe.com/commerce/webapi/graphql/) — cổng tổng
 - Schema guide — Cart: [`schema-cart.md`](./schema-cart.md)
 - Schema guide — Catalog Service: [`schema-catalog-service.md`](./schema-catalog-service.md)
+- Schema guide — Checkout: [`schema-checkout.md`](./schema-checkout.md)
 - Schema guide — Attributes: [`schema-attributes.md`](./schema-attributes.md)
 - Development (tóm tắt Adobe): [`development.md`](./development.md)
 - App Server & resolver stateless: [`../graphql-app-server.md`](../graphql-app-server.md)
