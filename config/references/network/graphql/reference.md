@@ -2,6 +2,8 @@
 
 Nguồn: [GraphQL API reference](https://developer.adobe.com/commerce/webapi/graphql/reference/)
 
+**Bổ sung:** [GraphQL schema](https://developer.adobe.com/commerce/webapi/graphql/schema/) (guide theo domain — Attributes, Cart, …) khác với trang **reference theo phiên bản**; tóm tắt nhóm **Attributes** trong [`schema-attributes.md`](./schema-attributes.md).
+
 ## Cách dùng trang reference
 
 - Một endpoint GraphQL, toàn bộ **queries / mutations / types** được mô tả theo **phiên bản** (vd. **2.4.8** cho stack PaaS/on-prem trùng `constitution.md`).

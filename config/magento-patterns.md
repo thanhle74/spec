@@ -127,6 +127,7 @@ Vendor/Module/
 ### 🌐 Network & AI (Kết nối)
 - [Web API (REST/SOAP)](./references/network/web-api.md)
 - [GraphQL — Web API (reference & usage)](./references/network/graphql/README.md)
+- [GraphQL — Schema guide — Attributes](./references/network/graphql/schema-attributes.md)
 - [GraphQL — Development (schema, resolver, test)](./references/network/graphql/development.md)
 - [GraphQL & App Server (resolver, stateless)](./references/network/graphql-app-server.md)
 - [Message Queues](./references/network/message-queues.md)
