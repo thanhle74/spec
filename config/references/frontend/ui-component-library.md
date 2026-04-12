@@ -570,18 +570,69 @@ Cung cấp các hành động thực hiện trên nhiều bản ghi cùng lúc.
 ## 20. Linh kiện Popup & Layout
 
 ### A. Modal (Popup)
-Linh kiện tạo cửa sổ hội thoại (Dialog). Có thể chứa Form hoặc bất kỳ nội dung UI khác.
+
+Nguồn chi tiết: [Modal (Adobe Commerce UI Components)](https://developer.adobe.com/commerce/frontend-core/ui-components/components/modal).
+
+Modal là cửa sổ phụ chồng lên trang; dùng được ở Admin và storefront. JS: `Magento_Ui/.../modal/modal-component.js`, template: `ui/modal/modal-component.html` (kế thừa `uiCollection`).
+
+#### Các tùy chọn thường dùng (trong `config` / `settings`)
+
+| Thuộc tính | Ý nghĩa | Mặc định (gợi nhớ) |
+|------------|---------|---------------------|
+| `modalClass` | CSS class gốc của template | `modal-component` |
+| `onCancel` | Tên method khi user đóng modal | `closeModal` |
+| `options` | Object truyền xuống modal widget (title, subTitle, buttons, type, slide/popup, responsive, innerScroll, autoOpen, …) | — |
+| `subTitle` | Phụ đề header | `''` |
+| `template` | Đường dẫn template `.html` | `ui/modal/modal-component` |
+| `title` | Tiêu đề header | `''` |
+| `valid` | Trạng thái hợp lệ (ảnh hưởng luồng Done) | `true` |
+
+Có thể khai báo theo kiểu `<argument name="data">` + `config` (như tài liệu Adobe) hoặc `<settings>` + `<options>` tùy form/listing đang merge.
+
+#### Methods / sự kiện chính (phía JS component)
+
+- `openModal()` / `closeModal()` / `toggleModal()`
+- `actionCancel()` — khôi phục trạng thái con như lúc mở, rồi đóng
+- `actionDone()` — validate nội dung con, hợp lệ thì đóng
+- `setTitle()` / `setSubTitle()` — đổi tiêu đề động
+- `setPrevValues(elem)` — reset nhánh component con
+
+#### Ví dụ tối thiểu (settings + type popup)
+
 ```xml
 <modal name="my_modal">
     <settings>
         <options>
-            <option name="title" xsi:type="string">Thông báo</option>
+            <option name="title" xsi:type="string" translate="true">Thông báo</option>
             <option name="type" xsi:type="string">popup</option>
+            <option name="responsive" xsi:type="boolean">true</option>
         </options>
     </settings>
-    <!-- Nội dung bên trong modal -->
+    <!-- fieldset, field, container... -->
 </modal>
 ```
+
+#### Mở modal từ Button (target + action)
+
+Nút gọi `openModal` trên instance modal (dùng `targetName` + `actionName`; `parentName` / `${ $.name }` tùy cây component):
+
+```xml
+<button name="open_my_modal">
+    <argument name="data" xsi:type="array">
+        <item name="config" xsi:type="array">
+            <item name="title" xsi:type="string" translate="true">Mở modal</item>
+            <item name="actions" xsi:type="array">
+                <item name="0" xsi:type="array">
+                    <item name="targetName" xsi:type="string">${ $.parentName }.my_modal</item>
+                    <item name="actionName" xsi:type="string">openModal</item>
+                </item>
+            </item>
+        </item>
+    </argument>
+</button>
+```
+
+Trang Adobe có thêm ví dụ đầy đủ (fieldset + field, bộ nút Cancel / Clear / Done trong `options.buttons`, và modal `autoOpen` + `type` popup). Khi cần copy pattern production, nên đối chiếu trực tiếp link ở đầu mục.
 
 ### B. Masonry Layout
 Sắp xếp các khối linh kiện con theo dạng "gạch xếp" (giống Pinterest), tự động tối ưu không gian hiển thị.
@@ -591,7 +642,22 @@ Sắp xếp các khối linh kiện con theo dạng "gạch xếp" (giống Pint
 ## 21. Nhập liệu Phức hợp (Complex Inputs)
 
 ### A. Multiselect
-Cho phép chọn nhiều giá trị từ một danh sách cố định.
+
+Nguồn chi tiết: [Multiselect component (Adobe Commerce)](https://developer.adobe.com/commerce/frontend-core/ui-components/components/multiselect).
+
+Kế thừa **Select**; cho phép chọn **nhiều** mục từ danh sách hoặc data source. JS: `Magento_Ui/js/form/element/multiselect.js`, template phần tử: `ui/form/element/multiselect.html`.
+
+#### Tùy chọn `config` thường gặp
+
+| Thuộc tính | Ý nghĩa | Mặc định |
+|------------|---------|----------|
+| `component` | RequireJS tới `.js` | `Magento_Ui/js/form/element/multiselect` |
+| `elementTmpl` | Template cho control multiselect | `ui/form/element/multiselect` |
+| `size` | Số option hiển thị cùng lúc trong UI | `6` |
+| `template` | Template khung field chung | `ui/form/field` |
+
+#### Options từ class (Collection / Source)
+
 ```xml
 <field name="store_ids" formElement="multiselect">
     <settings>
@@ -601,8 +667,57 @@ Cho phép chọn nhiều giá trị từ một danh sách cố định.
 </field>
 ```
 
+#### Options khai báo tĩnh trong XML (theo ví dụ Adobe)
+
+```xml
+<field name="multiselect_example" formElement="multiselect">
+    <settings>
+        <dataType>text</dataType>
+        <label translate="true">Multiselect Example</label>
+        <dataScope>multiselect_example</dataScope>
+    </settings>
+    <formElements>
+        <multiselect>
+            <settings>
+                <options>
+                    <option name="1" xsi:type="array">
+                        <item name="value" xsi:type="string">1</item>
+                        <item name="label" xsi:type="string">Option #1</item>
+                    </option>
+                    <option name="2" xsi:type="array">
+                        <item name="value" xsi:type="string">2</item>
+                        <item name="label" xsi:type="string">Option #2</item>
+                    </option>
+                </options>
+            </settings>
+        </multiselect>
+    </formElements>
+</field>
+```
+
 ### B. Multiline
-Dùng để nhóm nhiều ô nhập liệu thành một khối logic (ví dụ: Địa chỉ gồm dòng 1, dòng 2).
+
+Nguồn chi tiết: [Multiline component (Adobe Commerce)](https://developer.adobe.com/commerce/frontend-core/ui-components/components/multiline).
+
+**Multiline** là một nhóm các field **cùng kiểu** (ví dụ nhiều dòng **Street address**). Phía PHP: `Magento\Ui\Component\Form\Element\Multiline`; phía JS kế thừa `uiCollection`, component mặc định: `Magento_Ui/js/form/components/group`, template tổng: `ui/group/group.html`, template từng field: `ui/form/field` — file nguồn: `group.js`, `group.html`, `Multiline.php`.
+
+#### Các tùy chọn `config` thường gặp
+
+| Thuộc tính | Ý nghĩa | Kiểu | Mặc định |
+|------------|---------|------|----------|
+| `additionalClasses` | Class bổ sung cho block DOM | Object | `{}` |
+| `breakLine` | `true` → class `admin__control-fields`; `false` → `admin__control-grouped` | Boolean | `true` |
+| `component` | Đường dẫn RequireJS | String | `Magento_Ui/js/form/components/group` |
+| `fieldTemplate` | Template HTML cho **từng** field con | String | `ui/form/field` |
+| `label` | Nhãn nhóm | String | `''` |
+| `required` | Bắt buộc | Boolean | `false` |
+| `showLabel` | Có render label hay không | Boolean | `''` (theo doc Adobe) |
+| `template` | Template tổng của nhóm | String | `ui/group/group` |
+| `validateWholeGroup` | Hiển thị khối kết quả validation cho **cả nhóm** | Boolean | `false` |
+| `visible` | Ẩn/hiện ban đầu | Boolean | `true` |
+
+#### Cách 1 — `formElement="multiline"` (form XML chuẩn, ví dụ địa chỉ)
+
 ```xml
 <field name="street" formElement="multiline">
     <settings>
@@ -611,12 +726,126 @@ Dùng để nhóm nhiều ô nhập liệu thành một khối logic (ví dụ: 
 </field>
 ```
 
+#### Cách 2 — `container` + `component=".../group"` (nhóm field tùy biến, như ví dụ Adobe)
+
+Dùng khi cần nhiều field con khác loại trong cùng một “multiline/group” (select + checkbox + input trong một nhóm):
+
+```xml
+<container name="custom_group" component="Magento_Ui/js/form/components/group" sortOrder="20">
+    <argument name="data" xsi:type="array">
+        <item name="type" xsi:type="string">group</item>
+        <item name="config" xsi:type="array">
+            <item name="label" xsi:type="string" translate="true">Custom Group</item>
+            <item name="required" xsi:type="boolean">true</item>
+            <item name="validateWholeGroup" xsi:type="boolean">true</item>
+        </item>
+    </argument>
+    <field name="select_element" formElement="select">
+        <settings>
+            <dataType>number</dataType>
+            <labelVisible>false</labelVisible>
+        </settings>
+        <formElements>
+            <select>
+                <settings>
+                    <options class="Magento\Config\Model\Config\Source\Yesno"/>
+                </settings>
+            </select>
+        </formElements>
+    </field>
+    <field name="text_field" formElement="input">
+        <settings>
+            <validation>
+                <rule name="required-entry" xsi:type="boolean">true</rule>
+            </validation>
+            <dataType>text</dataType>
+        </settings>
+    </field>
+</container>
+```
+
+Chi tiết đầy đủ (thêm checkbox, `dataScope`, v.v.) xem trực tiếp trang Adobe ở link trên.
+
 ---
 
-## 22. Linh kiện Cột Grid (Bổ sung)
+## 22. Cột Grid — MultiselectColumn, OnOffColumn & LinkColumn
 
-- **LinkColumn**: Hiển thị text có gắn link tĩnh hoặc động.
-- **MultiselectColumn**: Cột chứa checkbox ở đầu mỗi dòng Grid để phục vụ MassActions.
+### A. MultiselectColumn
+
+Nguồn chi tiết: [MultiselectColumn (Adobe Commerce)](https://developer.adobe.com/commerce/frontend-core/ui-components/components/multiselect-column).
+
+Cột checkbox để chọn nhiều dòng + hỗ trợ Mass Actions; là con của **Listing**. JS: `Magento_Ui/js/grid/columns/multiselect.js`, template header/body theo doc.
+
+#### Tùy chọn
+
+| Thuộc tính | Ý nghĩa | Mặc định |
+|------------|---------|----------|
+| `bodyTmpl` | Template ô trong body | `ui/grid/cells/multiselect` |
+| `controlVisibility` | Có cho ColumnsControls ẩn/hiện cột | `false` |
+| `draggable` | Kéo thả thứ tự cột | `false` |
+| `fieldClass` | Class bổ sung cho ô | `{'data-grid-checkbox-cell': true}` |
+| `headerTmpl` | Template header cột | `ui/grid/columns/multiselect` |
+| `indexField` | Field ID duy nhất mỗi dòng | — (bắt buộc cấu hình) |
+| `preserveSelectionsOnFilter` | Giữ selection khi đổi filter | `false` |
+| `sortable` | Cho phép sort theo cột | `false` |
+
+#### Cách khuyên dùng — `selectionsColumn` (listing XML hiện đại)
+
+```xml
+<columns name="entity_columns">
+    <selectionsColumn name="ids">
+        <settings>
+            <indexField>entity_id</indexField>
+        </settings>
+    </selectionsColumn>
+</columns>
+```
+
+#### Cách cũ / tùy biến sâu — `<column>` + `js_config` + `Magento\Ui\Component\MassAction\Columns\Column`
+
+```xml
+<column name="ids" class="Magento\Ui\Component\MassAction\Columns\Column">
+    <argument name="data" xsi:type="array">
+        <item name="js_config" xsi:type="array">
+            <item name="component" xsi:type="string">Magento_Ui/js/grid/columns/multiselect</item>
+        </item>
+        <item name="config" xsi:type="array">
+            <item name="indexField" xsi:type="string">page_id</item>
+        </item>
+    </argument>
+</column>
+```
+
+Có thể ghi đè `headerTmpl`, `indexField`, hoặc `imports` (theo ví dụ trên trang Adobe). Không phát sinh event riêng; component khác đọc state qua registry/subscription.
+
+---
+
+### B. OnOffColumn
+
+Nguồn chi tiết: [OnOffColumn (Adobe Commerce)](https://developer.adobe.com/commerce/frontend-core/ui-components/components/on-off-column).
+
+**Decorator** của MultiselectColumn: hiển thị **toggle** thay vì checkbox. Kế thừa MultiselectColumn. JS: `Magento_Ui/js/grid/columns/onoff.js`.
+
+| Thuộc tính | Mặc định (gợi nhớ) |
+|------------|-------------------|
+| `component` | `Magento_Ui/js/grid/columns/onoff` |
+| `bodyTmpl` | `ui/grid/cells/onoff` |
+| `headerTmpl` | `ui/grid/columns/onoff` |
+| `fieldClass` | `admin__scope-old`, `data-grid-onoff-cell`, tắt `data-grid-checkbox-cell` |
+
+```xml
+<column name="status_toggle" component="Magento_Ui/js/grid/columns/onoff">
+    <settings>
+        <dataType>select</dataType>
+    </settings>
+</column>
+```
+
+---
+
+### C. LinkColumn
+
+Hiển thị text có gắn link tĩnh hoặc động (xử lý trong `prepareDataSource` / renderer).
 
 ---
 
@@ -639,13 +868,51 @@ Container phía trên Grid, chứa tất cả các tiện ích điều khiển.
 ```
 
 ### B. Paging
-Phân trang cho Grid. Tự động tạo giao diện "Trang 1 / N" với điều hướng.
+
+Nguồn chi tiết: [Paging (Adobe Commerce)](https://developer.adobe.com/commerce/frontend-core/ui-components/components/paging).
+
+Phân trang cho **Listing**; tạo thêm instance **Sizes** (chọn số bản ghi/trang). JS: `Magento_Ui/js/grid/paging/paging.js`, template: `ui/grid/paging/paging`, tổng số bản ghi: `ui/grid/paging-total`.
+
+#### Tùy chọn
+
+| Thuộc tính | Ý nghĩa | Mặc định |
+|------------|---------|----------|
+| `current` | Trang hiện tại | `1` |
+| `sizesConfig.maxSize` | Số phần tử tối đa mỗi trang (truyền cho Sizes) | `999` |
+| `sizesConfig.minSize` | Tối thiểu | `1` |
+| `template` | Template paging | `ui/grid/paging/paging` |
+| `totalTmpl` | Template dòng “tổng số bản ghi” | `ui/grid/paging-total` |
+
+#### Gắn trong listingToolbar
+
 ```xml
-<paging name="listing_paging"/>
+<listingToolbar name="listing_top">
+    <paging name="listing_paging"/>
+</listingToolbar>
+```
+
+#### Cấu hình kích thước trang và danh sách tùy chọn
+
+```xml
+<paging name="listing_paging">
+    <settings>
+        <options>
+            <option name="32" xsi:type="array">
+                <item name="value" xsi:type="number">32</item>
+                <item name="label" xsi:type="string">32</item>
+            </option>
+            <option name="48" xsi:type="array">
+                <item name="value" xsi:type="number">48</item>
+                <item name="label" xsi:type="string">48</item>
+            </option>
+        </options>
+        <pageSize>32</pageSize>
+    </settings>
+</paging>
 ```
 
 ### C. Sizes
-Cho phép người dùng thay đổi số lượng bản ghi hiển thị trên mỗi trang (20, 30, 50, 100, 200).
+Cho phép người dùng thay đổi số lượng bản ghi hiển thị trên mỗi trang (20, 30, 50, 100, 200). Đi kèm **Paging** (xem mục B).
 
 ### D. Search
 Ô tìm kiếm nhanh (fulltext search) trên Grid.
@@ -685,8 +952,21 @@ Chọn một giá trị từ danh sách.
 </field>
 ```
 
-### B. RadioSet
-Nhóm nút radio cho phép chọn một giá trị duy nhất.
+### B. Radioset (Radio set)
+
+Nguồn chi tiết: [Radioset component (Adobe Commerce)](https://developer.adobe.com/commerce/frontend-core/ui-components/components/radio-set).
+
+Shortcut của **Checkboxset** với input dạng **radio** (chọn một giá trị). Cùng JS: `Magento_Ui/js/form/element/checkbox-set.js`, `multiple` = `false`, template: `ui/form/element/checkbox-set`.
+
+| Thuộc tính | Ý nghĩa | Mặc định |
+|------------|---------|----------|
+| `component` | RequireJS | `Magento_Ui/js/form/element/checkbox-set` |
+| `multiple` | `true` = checkbox, `false` = radio | `false` |
+| `options` | Mảng option hiển thị | `[]` |
+| `template` | Template component | `ui/form/element/checkbox-set` |
+
+#### Cách 1 — `formElement="radioset"` + options class (thường dùng trong module)
+
 ```xml
 <field name="type" formElement="radioset">
     <settings>
@@ -694,6 +974,31 @@ Nhóm nút radio cho phép chọn một giá trị duy nhất.
         <options class="Vendor\Module\Model\Source\TypeOptions"/>
     </settings>
 </field>
+```
+
+#### Cách 2 — thẻ `<radioset>` + options trong XML (theo ví dụ Adobe)
+
+```xml
+<radioset name="radioset_example">
+    <argument name="data" xsi:type="array">
+        <item name="config" xsi:type="array">
+            <item name="additionalInfo" xsi:type="string">Additional information</item>
+        </item>
+    </argument>
+    <settings>
+        <label translate="true">Radioset Component Example</label>
+        <options>
+            <option name="0" xsi:type="array">
+                <item name="value" xsi:type="number">1</item>
+                <item name="label" xsi:type="string" translate="true">Option #1</item>
+            </option>
+            <option name="1" xsi:type="array">
+                <item name="value" xsi:type="number">2</item>
+                <item name="label" xsi:type="string" translate="true">Option #2</item>
+            </option>
+        </options>
+    </settings>
+</radioset>
 ```
 
 ### C. Textarea
@@ -735,20 +1040,40 @@ Linh kiện dropdown nâng cao (typeahead/searchable), hỗ trợ tìm kiếm aj
 
 ## 25. Cột Grid (Bổ sung cuối)
 
-- **OnOffColumn**: Hiển thị switch bật/tắt cho giá trị boolean ngay trên Grid.
+- **OnOffColumn**: switch bật/tắt trên Grid — chi tiết xem **§22.B**.
 - **SelectColumn**: Hiển thị giá trị của một field Select dưới dạng nhãn (label) thay vì giá trị thô.
 - **ThumbnailColumn**: Hiển thị hình thu nhỏ (thumbnail) cho cột hình ảnh trong Grid.
 
 ---
 
-## 26. Tab (Navigation)
+## 26. Navigation (Tab group)
 
-Linh kiện tạo giao diện Tab (thẻ chuyển đổi) trong Form. Mỗi Tab chứa một Fieldset.
+Nguồn chi tiết: [Navigation (Adobe Commerce)](https://developer.adobe.com/commerce/frontend-core/ui-components/components/navigation).
+
+**Navigation** triển khai **điều hướng dạng tab** trong UI Component Form (JS: `Magento_Ui/js/form/components/tab_group`, template: `ui/tab`). UX tab trong Admin: [Tabs (Admin Design Pattern Library)](https://developer.adobe.com/commerce/admin-developer/pattern-library/containers/tabs/). Linh kiện con từng tab: có thể tham khảo [Tab component](https://developer.adobe.com/commerce/frontend-core/ui-components/components/tab).
+
+### Tùy chọn
+
+| Thuộc tính | Ý nghĩa | Mặc định |
+|------------|---------|----------|
+| `collapsible` | Bật/tắt chế độ thu gọn (collapsible) | `false` |
+| `component` | RequireJS constructor | `Magento_Ui/js/form/components/tab_group` |
+| `opened` | Trạng thái mở ban đầu khi `collapsible` bật | `true` |
+| `template` | Template HTML | `ui/tab` |
+
+Các tab con (fieldset, form sections) khai báo như **children** của container navigation trong `ui_component` form — tham khảo form mẫu trong core (ví dụ product/category) hoặc merge XML từ module.
+
+### Khác với `htmlContent` + Block
+
+Khi chỉ cần nhúng nội dung render bởi **Block PHP** (không dùng cây UI Component tab), có thể dùng:
+
 ```xml
 <htmlContent name="my_tab_content">
     <block class="Vendor\Module\Block\Adminhtml\MyTabBlock"/>
 </htmlContent>
 ```
+
+Hai cách phục vụ bối cảnh khác nhau: **Navigation / tab_group** = tabs thuần UI Component; **htmlContent** = chèn block/layout truyền thống.
 
 ---
 
