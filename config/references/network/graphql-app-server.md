@@ -2,6 +2,9 @@
 
 Nguồn: https://developer.adobe.com/commerce/php/development/components/app-server
 
+**Web API GraphQL** (reference, usage, token, cache, response HTTP): xem thư mục [`graphql/`](./graphql/README.md).  
+**Nhánh Development trên Adobe** (schema `schema.graphqls`, resolver, Identity, urlResolver, debug, exception, test): xem [`graphql/development.md`](./graphql/development.md).
+
 ---
 
 ## 1. GraphQL trong Magento (Tổng quan)
