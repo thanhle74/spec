@@ -1,6 +1,6 @@
 # GraphQL — Web API (Adobe Commerce)
 
-Tài liệu gốc nằm trên **Adobe Developer — Commerce Web APIs → GraphQL**. Trong spec này, toàn bộ mục **Usage** (endpoint, token, cache, filter, response, headers, introspection, protected mutations, security, staging) gom tại [`usage.md`](./usage.md); **Reference** schema theo phiên bản tại [`reference.md`](./reference.md). Nhánh **Schema (guide)** — mục lục query/mutation theo domain trên Adobe: [`schema-attributes.md`](./schema-attributes.md) (**Attributes**), [`schema-cart.md`](./schema-cart.md) (**Cart** — queries §2–§4; mutations mục lục §5 chi tiết §6–§39; **interfaces** `CartItemInterface` §40), [`schema-catalog-service.md`](./schema-catalog-service.md) (**Catalog Service** + **`productSearch`** Live Search — §1–§7), [`schema-checkout.md`](./schema-checkout.md) (**Checkout** — queries §1–§6).
+Tài liệu gốc nằm trên **Adobe Developer — Commerce Web APIs → GraphQL**. Trong spec này, toàn bộ mục **Usage** (endpoint, token, cache, filter, response, headers, introspection, protected mutations, security, staging) gom tại [`usage.md`](./usage.md); **Reference** schema theo phiên bản tại [`reference.md`](./reference.md). Nhánh **Schema (guide)** — mục lục query/mutation theo domain trên Adobe: [`schema-attributes.md`](./schema-attributes.md) (**Attributes**), [`schema-cart.md`](./schema-cart.md) (**Cart** — queries §2–§4; mutations mục lục §5 chi tiết §6–§39; **interfaces** `CartItemInterface` §40), [`schema-catalog-service.md`](./schema-catalog-service.md) (**Catalog Service** + **`productSearch`** Live Search — §1–§7), [`schema-checkout.md`](./schema-checkout.md) (**Checkout** — queries + mutations), [`schema-company.md`](./schema-company.md) (**Company (B2B)** — queries + mutations + unions), [`schema-customer.md`](./schema-customer.md) (**Customer** — queries).
 
 Nhánh **Development** (định nghĩa `schema.graphqls`, resolver/batch resolver, mở rộng schema, Identity/cache tag, urlResolver tùy chỉnh, debug, exception, functional test): [`development.md`](./development.md).  
 **App Server / resolver stateless** (ràng buộc khi chạy long-lived PHP): [`../graphql-app-server.md`](../graphql-app-server.md) — bổ sung cho doc Adobe, không thay thế.
@@ -156,6 +156,55 @@ Nhánh **Development** (định nghĩa `schema.graphqls`, resolver/batch resolve
 | `customerPaymentTokens` | [customerPaymentTokens](https://developer.adobe.com/commerce/webapi/graphql/schema/checkout/queries/customer-payment-tokens/) | [`schema-checkout.md`](./schema-checkout.md) §4 |
 | `getHostedProUrl` | [getHostedProUrl](https://developer.adobe.com/commerce/webapi/graphql/schema/checkout/queries/get-hosted-pro-url/) | [`schema-checkout.md`](./schema-checkout.md) §5 |
 | `getPayflowLinkToken` | [getPayflowLinkToken](https://developer.adobe.com/commerce/webapi/graphql/schema/checkout/queries/get-payflow-link-token/) | [`schema-checkout.md`](./schema-checkout.md) §6 |
+| Danh sách mutations | [Checkout mutations](https://developer.adobe.com/commerce/webapi/graphql/schema/checkout/mutations/) | [`schema-checkout.md`](./schema-checkout.md) §7 |
+| `createBraintreeClientToken` | [createBraintreeClientToken](https://developer.adobe.com/commerce/webapi/graphql/schema/checkout/mutations/create-braintree-client-token/) | [`schema-checkout.md`](./schema-checkout.md) §8 |
+| `createKlarnaPaymentsSession` | [createKlarnaPaymentsSession](https://developer.adobe.com/commerce/webapi/graphql/schema/checkout/mutations/create-klarna-payments-session/) | [`schema-checkout.md`](./schema-checkout.md) §9 |
+| `createPayflowProToken` | [createPayflowProToken](https://developer.adobe.com/commerce/webapi/graphql/schema/checkout/mutations/create-payflow-pro-token/) | [`schema-checkout.md`](./schema-checkout.md) §10 |
+| `createPaypalExpressToken` | [createPaypalExpressToken](https://developer.adobe.com/commerce/webapi/graphql/schema/checkout/mutations/create-paypal-express-token/) | [`schema-checkout.md`](./schema-checkout.md) §11 |
+| `deletePaymentToken` | [deletePaymentToken](https://developer.adobe.com/commerce/webapi/graphql/schema/checkout/mutations/delete-payment-token/) | [`schema-checkout.md`](./schema-checkout.md) §12 |
+| `handlePayflowProResponse` | [handlePayflowProResponse](https://developer.adobe.com/commerce/webapi/graphql/schema/checkout/mutations/handle-payflow-pro-response/) | [`schema-checkout.md`](./schema-checkout.md) §13 |
+
+### Schema — Company (B2B) (queries + mutations)
+
+| Chủ đề | Adobe (chính thức) | Trong `.spec` |
+|--------|-------------------|----------------|
+| Company (B2B) (tổng quan) | [Company (B2B)](https://developer.adobe.com/commerce/webapi/graphql/schema/b2b/company/) | [`schema-company.md`](./schema-company.md) §1 |
+| Danh sách queries | [Company queries](https://developer.adobe.com/commerce/webapi/graphql/schema/b2b/company/queries/) | [`schema-company.md`](./schema-company.md) §2 |
+| `company` | [company](https://developer.adobe.com/commerce/webapi/graphql/schema/b2b/company/queries/company/) | [`schema-company.md`](./schema-company.md) §3 |
+| `isCompanyAdminEmailAvailable` | [isCompanyAdminEmailAvailable](https://developer.adobe.com/commerce/webapi/graphql/schema/b2b/company/queries/is-company-admin-email-available/) | [`schema-company.md`](./schema-company.md) §4 |
+| `isCompanyEmailAvailable` | [isCompanyEmailAvailable](https://developer.adobe.com/commerce/webapi/graphql/schema/b2b/company/queries/is-company-email-available/) | [`schema-company.md`](./schema-company.md) §5 |
+| `isCompanyRoleNameAvailable` | [isCompanyRoleNameAvailable](https://developer.adobe.com/commerce/webapi/graphql/schema/b2b/company/queries/is-company-role-name-available/) | [`schema-company.md`](./schema-company.md) §6 |
+| `isCompanyUserEmailAvailable` | [isCompanyUserEmailAvailable](https://developer.adobe.com/commerce/webapi/graphql/schema/b2b/company/queries/is-company-user-email-available/) | [`schema-company.md`](./schema-company.md) §7 |
+| Danh sách mutations | [Company mutations](https://developer.adobe.com/commerce/webapi/graphql/schema/b2b/company/mutations/) | [`schema-company.md`](./schema-company.md) §8 |
+| `createCompany` | [createCompany](https://developer.adobe.com/commerce/webapi/graphql/schema/b2b/company/mutations/create/) | [`schema-company.md`](./schema-company.md) §9 |
+| `createCompanyRole` | [createCompanyRole](https://developer.adobe.com/commerce/webapi/graphql/schema/b2b/company/mutations/create-role/) | [`schema-company.md`](./schema-company.md) §10 |
+| `createCompanyTeam` | [createCompanyTeam](https://developer.adobe.com/commerce/webapi/graphql/schema/b2b/company/mutations/create-team/) | [`schema-company.md`](./schema-company.md) §11 |
+| `createCompanyUser` | [createCompanyUser](https://developer.adobe.com/commerce/webapi/graphql/schema/b2b/company/mutations/create-user/) | [`schema-company.md`](./schema-company.md) §12 |
+| `updateCompany` | [updateCompany](https://developer.adobe.com/commerce/webapi/graphql/schema/b2b/company/mutations/update/) | [`schema-company.md`](./schema-company.md) §13 |
+| `updateCompanyRole` | [updateCompanyRole](https://developer.adobe.com/commerce/webapi/graphql/schema/b2b/company/mutations/update-role/) | [`schema-company.md`](./schema-company.md) §14 |
+| `updateCompanyStructure` | [updateCompanyStructure](https://developer.adobe.com/commerce/webapi/graphql/schema/b2b/company/mutations/update-structure/) | [`schema-company.md`](./schema-company.md) §15 |
+| `updateCompanyTeam` | [updateCompanyTeam](https://developer.adobe.com/commerce/webapi/graphql/schema/b2b/company/mutations/update-team/) | [`schema-company.md`](./schema-company.md) §16 |
+| `updateCompanyUser` | [updateCompanyUser](https://developer.adobe.com/commerce/webapi/graphql/schema/b2b/company/mutations/update-user/) | [`schema-company.md`](./schema-company.md) §17 |
+| `deleteCompanyRole` | [deleteCompanyRole](https://developer.adobe.com/commerce/webapi/graphql/schema/b2b/company/mutations/delete-role/) | [`schema-company.md`](./schema-company.md) §18 |
+| `deleteCompanyTeam` | [deleteCompanyTeam](https://developer.adobe.com/commerce/webapi/graphql/schema/b2b/company/mutations/delete-team/) | [`schema-company.md`](./schema-company.md) §19 |
+| `deleteCompanyUser` | [deleteCompanyUser](https://developer.adobe.com/commerce/webapi/graphql/schema/b2b/company/mutations/delete-user/) | [`schema-company.md`](./schema-company.md) §20 |
+| Danh sách unions | [Company unions](https://developer.adobe.com/commerce/webapi/graphql/schema/b2b/company/unions/) | [`schema-company.md`](./schema-company.md) §21 |
+| `CompanyStructureEntity` | [CompanyStructureEntity](https://developer.adobe.com/commerce/webapi/graphql/schema/b2b/company/unions/structure-entity/) | [`schema-company.md`](./schema-company.md) §22 |
+
+### Schema — Customer (queries)
+
+| Chủ đề | Adobe (chính thức) | Trong `.spec` |
+|--------|-------------------|----------------|
+| Customer (tổng quan) | [Customer](https://developer.adobe.com/commerce/webapi/graphql/schema/customer/) | [`schema-customer.md`](./schema-customer.md) §1 |
+| Danh sách queries | [Customer queries](https://developer.adobe.com/commerce/webapi/graphql/schema/customer/queries/) | [`schema-customer.md`](./schema-customer.md) §2 |
+| `customer` | [customer](https://developer.adobe.com/commerce/webapi/graphql/schema/customer/queries/customer/) | [`schema-customer.md`](./schema-customer.md) §3 |
+| `customerCart` | [customerCart](https://developer.adobe.com/commerce/webapi/graphql/schema/customer/queries/cart/) | [`schema-customer.md`](./schema-customer.md) §4 |
+| `customerDownloadableProducts` | [customerDownloadableProducts](https://developer.adobe.com/commerce/webapi/graphql/schema/customer/queries/downloadable-products/) | [`schema-customer.md`](./schema-customer.md) §5 |
+| `customerGroup` | [customerGroup](https://developer.adobe.com/commerce/webapi/graphql/schema/customer/queries/customer-group/) | [`schema-customer.md`](./schema-customer.md) §6 |
+| `customerOrders` | [customerOrders](https://developer.adobe.com/commerce/webapi/graphql/schema/customer/queries/orders/) | [`schema-customer.md`](./schema-customer.md) §7 |
+| `customerSegments` | [customerSegments](https://developer.adobe.com/commerce/webapi/graphql/schema/customer/queries/customer-segments/) | [`schema-customer.md`](./schema-customer.md) §8 |
+| `giftCardAccount` | [giftCardAccount](https://developer.adobe.com/commerce/webapi/graphql/schema/customer/queries/giftcard-account/) | [`schema-customer.md`](./schema-customer.md) §9 |
+| `isEmailAvailable` | [isEmailAvailable](https://developer.adobe.com/commerce/webapi/graphql/schema/customer/queries/is-email-available/) | [`schema-customer.md`](./schema-customer.md) §10 |
 
 ---
 
@@ -165,6 +214,8 @@ Nhánh **Development** (định nghĩa `schema.graphqls`, resolver/batch resolve
 - Schema guide — Cart: [`schema-cart.md`](./schema-cart.md)
 - Schema guide — Catalog Service: [`schema-catalog-service.md`](./schema-catalog-service.md)
 - Schema guide — Checkout: [`schema-checkout.md`](./schema-checkout.md)
+- Schema guide — Company (B2B): [`schema-company.md`](./schema-company.md)
+- Schema guide — Customer: [`schema-customer.md`](./schema-customer.md)
 - Schema guide — Attributes: [`schema-attributes.md`](./schema-attributes.md)
 - Development (tóm tắt Adobe): [`development.md`](./development.md)
 - App Server & resolver stateless: [`../graphql-app-server.md`](../graphql-app-server.md)
