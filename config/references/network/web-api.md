@@ -1,138 +1,246 @@
-# Tham khảo: Web APIs (REST & SOAP)
+# Web APIs (Get Started) — REST/SOAP/Auth/Security
 
-Nguồn: https://developer.adobe.com/commerce/php/development/components/web-api/services
+Nguồn chính:
 
----
-
-## 1. Cơ chế tự động hóa
-
-Magento tự động tạo API dựa trên **Service Contract** (Interface). Một phương thức trong Interface có tên `save(\Vendor\Module\Api\Data\MyDataInterface $data)` sẽ được biến thành một POST request với body là JSON tương ứng với `MyDataInterface`.
+- [Getting started with Adobe Commerce web APIs](https://developer.adobe.com/commerce/webapi/get-started/)
 
 ---
 
-## 2. Quy tắc DocBlock (Bắt buộc)
+## 1. Tổng quan Get Started
 
-Do Magento dùng Reflection để parse kiểu dữ liệu cho API, docblock của Interface phải cực kỳ chính xác:
+Web API framework của Adobe Commerce/Magento Open Source hỗ trợ:
 
-- **BẮT BUỘC** dùng Full Namespace cho các class/interface.
-- **BẮT BUỘC** định nghĩa rõ kiểu dữ liệu trả về.
+- `REST`, `SOAP` và `GraphQL`.
+- Các cơ chế xác thực theo loại client: token, OAuth, session.
+- Phân quyền dựa trên tài nguyên khai báo trong `webapi.xml` + ACL.
 
-```php
-/**
- * @param int $id
- * @param \Vendor\Module\Api\Data\MyInterface $data  <-- Phải có đầy đủ namespace
- * @return \Vendor\Module\Api\Data\ResultInterface[] <-- Mảng các object
- */
-public function process(int $id, \Vendor\Module\Api\Data\MyInterface $data);
-```
+Mục tiêu tài liệu này là tóm tắt nhanh phần **Get Started** cho backend integration và security baseline.
 
 ---
 
-## 3. Cấu hình `webapi.xml`
+## 2. Cấu trúc request REST cơ bản
 
-Nằm trong thư mục `etc/webapi.xml`.
+Nguồn:
 
-```xml
-<routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Webapi:etc/webapi.xsd">
-    <route url="/V1/my-feature/:id" method="GET">
-        <service class="<Vendor>\<Module>\Api\MyRepositoryInterface" method="getById"/>
-        <resources>
-            <resource ref="<Vendor>_<Module>::my_resource"/> <!-- ACL Resource -->
-        </resources>
-    </route>
-    
-    <!-- Route cho khách hàng tự truy cập thông tin của mình -->
-    <route url="/V1/my-feature/me" method="GET">
-        <service class="<Vendor>\<Module>\Api\MyManagementInterface" method="getForCustomer"/>
-        <resources>
-            <resource ref="self"/> <!-- Cho phép user dùng Token cá nhân -->
-        </resources>
-        <data>
-            <!-- Ép tham số customerId lấy từ Token đăng nhập, tránh giả mạo ID -->
-            <parameter name="customerId" force="true">%customer_id%</parameter>
-        </data>
-    </route>
-</routes>
-```
+- [Construct a request](https://developer.adobe.com/commerce/webapi/get-started/gs-web-api-request/)
+- [Using cURL to run requests](https://developer.adobe.com/commerce/webapi/get-started/gs-curl/)
+- [Status codes and REST responses](https://developer.adobe.com/commerce/webapi/get-started/gs-web-api-response/)
+
+Các thành phần chính:
+
+- `HTTP verb`: `GET`, `POST`, `PUT`, `DELETE`.
+- `Endpoint`: `<host>/rest/<store_code>/V1/...`
+- `Headers`: `Authorization`, `Content-Type`, `Accept`, và các header ngữ cảnh.
+- `Payload`: tham số URI + body JSON/XML.
+
+Header thường dùng:
+
+| Header | Ghi chú |
+|--------|--------|
+| `Authorization` | `Bearer <token>` khi endpoint không phải anonymous |
+| `Content-Type` | Bắt buộc khi có body; thường `application/json` |
+| `Accept` | Kiểu response mong muốn (`json`/`xml`) |
+| `X-Adobe-Company` | Scope company cho user thuộc nhiều company (B2B) |
+| `X-Captcha` / `X-ReCaptcha` | Bắt buộc khi form bật CAPTCHA/reCAPTCHA |
 
 ---
 
-## 4. Bảo mật & Xác thực (Authentication)
+## 3. HTTP status và error format
 
-1. **Token-based:** Thường dùng cho Mobile App hoặc Integrations.
-2. **OAuth:** Dùng cho các ứng dụng bên thứ 3.
-3. **Session-based:** Dùng cho AJAX request từ chính Frontend của Magento.
+Nguồn:
 
----
+- [Status codes and REST responses](https://developer.adobe.com/commerce/webapi/get-started/gs-web-api-response/)
 
-## 5. Phân quyền (ACL Resource Accessibility)
+HTTP code thường gặp:
 
-Trong `webapi.xml`, mỗi route phải khai báo ít nhất một `<resource>`.
+- `200`: thành công.
+- `400`: request không hợp lệ / validation fail.
+- `401`: thiếu/sai auth hoặc không đủ quyền theo token.
+- `403`: bị cấm truy cập.
+- `404`: endpoint không tồn tại.
+- `405`: sai HTTP method cho endpoint.
+- `500`: lỗi hệ thống.
 
-### Các giá trị đặc biệt:
-- **`anonymous`**: Cho phép truy cập công khai (Guest). Dùng cho các tính năng như Đăng ký khách hàng, Xem sản phẩm.
-- **`self`**: Cho phép khách hàng đã đăng nhập truy cập dữ liệu của chính mình.
-- **`Magento_Module::resource`**: Chỉ cho phép Admin hoặc Integration có quyền tương ứng trong `acl.xml`.
+Error payload điển hình:
 
-### Ví dụ phân quyền nâng cao:
-```xml
-<!-- Cho khách hàng tự cập nhật profile của mình -->
-<route url="/V1/customers/me" method="PUT">
-    <service class="Magento\Customer\Api\CustomerRepositoryInterface" method="save"/>
-    <resources>
-        <resource ref="self"/>
-    </resources>
-    <data>
-        <parameter name="customer.id" force="true">%customer_id%</parameter>
-    </data>
-</route>
-
-<!-- Cho Admin có quyền manage mới được sửa thông tin khách hàng bất kỳ -->
-<route url="/V1/customers/:customerId" method="PUT">
-    <service class="Magento\Customer\Api\CustomerRepositoryInterface" method="save"/>
-    <resources>
-        <resource ref="Magento_Customer::manage"/>
-    </resources>
-</route>
-```
+- `message`
+- `parameters` (nếu có)
 
 ---
 
-## 6. Custom Routes & Aliases (Asynchronous API)
+## 4. Authentication overview (PaaS)
 
-Bạn có thể đặt bí danh cho các route để URL ngắn gọn và dễ hiểu hơn thông qua file `etc/webapi_async.xml`.
+Nguồn:
 
-### Quy tắc:
-- Chỉ áp dụng cho các route **không có tham số biến** (ví dụ: không có `:id`).
-- Giúp che giấu cấu trúc URL thực tế của hệ thống.
+- [Authentication introduction](https://developer.adobe.com/commerce/webapi/get-started/authentication/)
 
-### Ví dụ:
-```xml
-<services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_WebapiAsync:etc/webapi_async.xsd">
-    <!-- Gọi POST /createWidget sẽ tương đương POST /V1/widgets -->
-    <route url="V1/widgets" method="POST" alias="createWidget" />
-</services>
-```
+Tài nguyên truy cập theo user type:
+
+- **Admin/Integration**: theo ACL đã cấp.
+- **Customer**: tài nguyên `anonymous` và `self`.
+- **Guest**: chỉ tài nguyên `anonymous`.
+
+Lưu ý triển khai:
+
+- `acl.xml` định nghĩa cây quyền.
+- `webapi.xml` gán quyền cụ thể cho từng route (`resource ref="..."`).
 
 ---
 
-## 7. Request Processors (Sync vs Async vs Bulk)
+## 5. Token-based authentication
 
-Magento phân loại luồng xử lý API dựa trên URL. Hiểu điều này giúp tối ưu hiệu suất tích hợp.
+Nguồn:
 
-| Loại | URL Pattern | Cơ chế | Sử dụng khi |
-|------|-------------|--------|-------------|
-| **Sync** | `/V1/...` | Chạy trực tiếp, trả kết quả ngay. | Thao tác đơn lẻ, cần kết quả tức thì. |
-| **Async** | `/async/V1/...` | Đưa vào Queue (RabbitMQ/DB), trả về `accepted`. | Các tác vụ nặng, không cần kết quả ngay. |
-| **Async Bulk**| `/async/bulk/V1/...` | Đưa mảng dữ liệu lớn vào Queue. | Tích hợp dữ liệu lớn (Import hàng loạt). |
+- [Token-based authentication](https://developer.adobe.com/commerce/webapi/get-started/authentication/gs-authentication-token/)
 
-### Lưu ý:
-Để sử dụng **Async/Bulk**, bạn phải bật và cấu hình **Message Queues** (bằng RabbitMQ hoặc Database) trong dự án.
+Loại token và TTL mặc định:
+
+| Token | TTL mặc định |
+|------|--------------|
+| Integration | Không hết hạn (đến khi revoke) |
+| Admin | 4 giờ |
+| Customer | 1 giờ |
+
+Endpoint lấy token phổ biến:
+
+- Customer: `POST /V1/integration/customer/token`
+- Admin (2FA providers): `POST /V1/tfa/provider/.../authenticate`
+
+Dùng token:
+
+- Gắn vào `Authorization: Bearer <token>`.
+
+Ghi chú:
+
+- Có cron dọn expired tokens theo giờ.
+- Với integration token, dùng flow OAuth đầy đủ là an toàn hơn cấu hình bearer standalone.
+
+---
+
+## 6. OAuth-based authentication (Integrations)
+
+Nguồn:
+
+- [OAuth-based authentication](https://developer.adobe.com/commerce/webapi/get-started/authentication/gs-authentication-oauth/)
+- [Create an integration](https://developer.adobe.com/commerce/webapi/get-started/create-integration/)
+- [OAuth error codes](https://developer.adobe.com/commerce/webapi/get-started/authentication/oauth-errors/)
+
+Luồng chính:
+
+1. Merchant tạo integration trong Admin.
+2. Activate integration (gửi `oauth_consumer_key`, `oauth_consumer_secret`, `oauth_verifier`, `store_base_url` về callback).
+3. App gọi `POST /oauth/token/request` lấy request token.
+4. App gọi `POST /oauth/token/access` + verifier để lấy access token.
+5. Gọi API với `Authorization: OAuth ...` đã ký `HMAC-SHA256`.
+
+OAuth error codes cần theo dõi:
+
+- `nonce_used`, `signature_invalid`, `consumer_key_rejected`, `permission_denied`, `method_not_allowed`,...
+
+---
+
+## 7. Session-based authentication (PaaS)
+
+Nguồn:
+
+- [Session-based authentication](https://developer.adobe.com/commerce/webapi/get-started/authentication/gs-authentication-session/)
+
+Đặc điểm:
+
+- Dùng session/cookie từ storefront (customer) hoặc Admin UI context.
+- Phù hợp cho JS widgets/Ajax calls nội bộ.
+- Khách chưa đăng nhập vẫn có thể gọi endpoints `anonymous`.
+
+---
+
+## 8. API security: Input limiting + Rate limiting
+
+Nguồn:
+
+- [Input limiting](https://developer.adobe.com/commerce/webapi/get-started/api-security/)
+- [Rate limiting](https://developer.adobe.com/commerce/webapi/get-started/rate-limiting/)
+
+### Input limiting
+
+- Giới hạn input list size cho REST đồng bộ/bất đồng bộ.
+- Giới hạn page size cho REST/GraphQL pagination.
+- Có thể bật qua Admin; PaaS hỗ trợ CLI/env.php/env vars.
+
+Ví dụ CLI:
+
+- `bin/magento config:set webapi/validation/input_limit_enabled 1`
+- `bin/magento config:set graphql/validation/input_limit_enabled 1`
+
+### Rate limiting (chống carding)
+
+- Áp dụng cho entry points liên quan `payment-information`/`order` (REST) và `placeOrder` flow qua GraphQL.
+- Cần cấu hình backpressure logger (thường Redis) + policy limits.
+- Nếu vi phạm:
+  - REST thường trả `429 Too Many Requests`
+  - GraphQL thường trả `200` với `errors[].extensions.category = graphql-too-many-requests`
+
+Config thường dùng:
+
+- `sales/backpressure/enabled`
+- `sales/backpressure/guest_limit`
+- `sales/backpressure/limit`
+- `sales/backpressure/period`
+
+---
+
+## 9. SOAP services
+
+Nguồn:
+
+- [Using SOAP services](https://developer.adobe.com/commerce/webapi/get-started/soap-web-api-calls/)
+
+Điểm chính:
+
+- WSDL tạo theo service được request.
+- Endpoint pattern:
+  - `http://<host>/soap/<optional_store_code>?wsdl&services=<service_1>,<service_2>`
+- Có thể dùng bearer token trong header khi gọi SOAP protected resources.
+
+---
+
+## 10. Create Integration (module-based)
+
+Nguồn:
+
+- [Create an integration](https://developer.adobe.com/commerce/webapi/get-started/create-integration/)
+
+Khung triển khai:
+
+- Tạo module skeleton (`etc`, `etc/integration`, `Setup`).
+- Khai báo `module.xml`, `composer.json`, `registration.php`.
+- Dùng `ConfigBasedIntegrationManager` trong setup data để nạp integration config.
+- Khai báo quyền trong `etc/integration/api.xml`.
+- Optionally pre-config integration trong `etc/integration/config.xml`.
+
+---
+
+## 11. Web API functional testing
+
+Nguồn:
+
+- [Web API functional testing](https://developer.adobe.com/commerce/webapi/get-started/web-api-functional-testing/)
+
+Ý chính:
+
+- Framework test Web API từ góc nhìn client, cho REST/SOAP.
+- Test class kế thừa `Magento\TestFramework\TestCase\WebapiAbstract`.
+- Có annotation `@magentoApiDataFixture` cho fixtures sống qua HTTP calls trong test.
+- Cần cấu hình `dev/tests/api-functional/phpunit_*.xml` và các biến môi trường test.
 
 ---
 
 ## Liên kết
 
-- Service Contracts: xem [service-contracts.md](./service-contracts.md)
-- GraphQL: xem [graphql-app-server.md](./graphql-app-server.md)
-- Quy tắc chung: xem [../constitution.md](../constitution.md)
+- REST guide (PaaS vs SaaS): [`rest/overview.md`](./rest/overview.md)
+- REST B2B integrations: [`rest/b2b.md`](./rest/b2b.md)
+- REST Inventory integrations (MSI): [`rest/inventory.md`](./rest/inventory.md)
+- REST tutorials (order processing): [`rest/tutorials.md`](./rest/tutorials.md)
+- GraphQL usage/reference: [`graphql/README.md`](./graphql/README.md)
+- GraphQL App Server: [`graphql-app-server.md`](./graphql-app-server.md)
+- Service Contracts: [`service-contracts.md`](./service-contracts.md)
+- Quy tắc chung: [`../constitution.md`](../constitution.md)
