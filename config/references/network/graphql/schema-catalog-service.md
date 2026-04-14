@@ -1,15 +1,18 @@
-# GraphQL — Schema (Guide): Catalog Service & Live Search (`productSearch`)
+# GraphQL — Schema (Guide): Storefront Services (Catalog Service + Live Search + Product Recommendations queries)
 
-Tóm tắt nhóm **Catalog Service** và query **`productSearch`** (tài liệu **Live Search**) trên Adobe. Đây là **schema dịch vụ** (services-only), khác **[core GraphQL schema](https://developer.adobe.com/commerce/webapi/graphql/schema/)** — endpoint và header không trùng GraphQL storefront cố định của Magento. Chi tiết field: từng link **Nguồn**.  
+Tóm tắt nhóm **Catalog Service**, query **Live Search** (`attributeMetadata`, `productSearch`) và **Product Recommendations** (`recommendations`) trên Adobe. Đây là **schema dịch vụ** (services-only), khác **[core GraphQL schema](https://developer.adobe.com/commerce/webapi/graphql/schema/)** — endpoint và header không trùng GraphQL storefront cố định của Magento. Chi tiết field: từng link **Nguồn**.  
 **Chữ ký theo bản:** [GraphQL API reference](https://developer.adobe.com/commerce/webapi/graphql/reference/) — xem [`reference.md`](./reference.md).
 
 ---
 
-## 1. Catalog Service (tổng quan)
+## 1. Storefront Services & Catalog Service (tổng quan)
 
 Nguồn: [Catalog Service for Adobe Commerce](https://developer.adobe.com/commerce/webapi/graphql/schema/catalog-service/)
+và [Adobe Storefront Services GraphQL](https://developer.adobe.com/commerce/webapi/graphql/schema/storefront-services/)
 
 - Extension đóng góp schema GraphQL **chuyên biệt** để lấy dữ liệu catalog (PDP, PLP, so sánh SP, …) không có đủ ở core schema.
+- Storefront Services gồm Catalog Service, Live Search, Product Recommendations; đều là SaaS services và dùng endpoint riêng (không phải `<commerce>/graphql` core).
+- Schema này chỉ có **queries** (read-only). Các tác vụ write (cart/checkout/customer/order mutations) vẫn đi qua core GraphQL schema.
 - Có thể dùng **[API Mesh](https://developer.adobe.com/graphql-mesh-gateway/)** (App Builder) để ghép core schema, Catalog Service và API nội bộ / bên thứ ba.
 - Kiến trúc & tra cứu triển khai: [Catalog Service Guide](https://experienceleague.adobe.com/docs/commerce-merchant-services/catalog-service/overview.html) (Experience League).
 
@@ -24,18 +27,19 @@ Nguồn: [Catalog Service for Adobe Commerce](https://developer.adobe.com/commer
 
 ---
 
-## 2. Catalog Service — danh sách queries (mục lục)
+## 2. Storefront Services — danh sách queries (mục lục)
 
-Nguồn mục lục: [Catalog Service](https://developer.adobe.com/commerce/webapi/graphql/schema/catalog-service/) (sidebar **Queries**).  
-`productSearch` được mô tả sâu trên trang **Live Search** — xem cột Nguồn.
+Nguồn mục lục: [Catalog Service](https://developer.adobe.com/commerce/webapi/graphql/schema/catalog-service/) + [Live Search queries](https://developer.adobe.com/commerce/webapi/graphql/schema/live-search/queries/).
 
 | Query | Nguồn Adobe | Trong file này |
 |-------|-------------|----------------|
 | `categories` | [categories](https://developer.adobe.com/commerce/webapi/graphql/schema/catalog-service/queries/categories/) | §3 |
 | `products` | [products](https://developer.adobe.com/commerce/webapi/graphql/schema/catalog-service/queries/products/) | §4 |
-| `productSearch` | [productSearch (Live Search)](https://developer.adobe.com/commerce/webapi/graphql/schema/live-search/queries/product-search/) | §5 |
-| `refineProduct` | [refineProduct](https://developer.adobe.com/commerce/webapi/graphql/schema/catalog-service/queries/refine-product/) | §6 |
-| `variants` | [variants](https://developer.adobe.com/commerce/webapi/graphql/schema/catalog-service/queries/product-variants/) | §7 |
+| `attributeMetadata` | [attributeMetadata (Live Search)](https://developer.adobe.com/commerce/webapi/graphql/schema/live-search/queries/attribute-metadata/) | §5 |
+| `productSearch` | [productSearch (Live Search)](https://developer.adobe.com/commerce/webapi/graphql/schema/live-search/queries/product-search/) | §6 |
+| `refineProduct` | [refineProduct](https://developer.adobe.com/commerce/webapi/graphql/schema/catalog-service/queries/refine-product/) | §7 |
+| `variants` | [variants](https://developer.adobe.com/commerce/webapi/graphql/schema/catalog-service/queries/product-variants/) | §8 |
+| `recommendations` | [recommendations (Product Recommendations)](https://developer.adobe.com/commerce/webapi/graphql/schema/product-recommendations/queries/recommendations/) | §9 |
 
 ---
 
@@ -62,7 +66,22 @@ Nguồn: [products (Catalog Service)](https://developer.adobe.com/commerce/webap
 
 ---
 
-## 5. `productSearch` (Live Search)
+## 5. `attributeMetadata` (Live Search)
+
+Nguồn: [attributeMetadata](https://developer.adobe.com/commerce/webapi/graphql/schema/live-search/queries/attribute-metadata/)
+
+- Mục đích: trả danh sách attribute có thể dùng để **sort** hoặc **filter** cho `productSearch`.
+- Output chính trong `AttributeMetadataResponse`:
+  - `sortable[]`
+  - `filterableInSearch[]`
+  - mỗi phần tử thường có `attribute`, `label`, `numeric`.
+- Dùng query này để build bộ lọc/sắp xếp động trên storefront, thay vì hard-code attribute codes.
+- Ghi chú thực thi:
+  - theo doc trang này, `X-Api-Key` dùng giá trị `search_gql`.
+
+---
+
+## 6. `productSearch` (Live Search)
 
 Nguồn: [productSearch](https://developer.adobe.com/commerce/webapi/graphql/schema/live-search/queries/product-search/)
 
@@ -75,7 +94,7 @@ Nguồn: [productSearch](https://developer.adobe.com/commerce/webapi/graphql/sch
 
 ---
 
-## 6. `refineProduct`
+## 7. `refineProduct`
 
 Nguồn: [refineProduct](https://developer.adobe.com/commerce/webapi/graphql/schema/catalog-service/queries/refine-product/)
 
@@ -84,7 +103,7 @@ Nguồn: [refineProduct](https://developer.adobe.com/commerce/webapi/graphql/sch
 
 ---
 
-## 7. `variants`
+## 8. `variants`
 
 Nguồn: [variants](https://developer.adobe.com/commerce/webapi/graphql/schema/catalog-service/queries/product-variants/) (slug URL: `product-variants`)
 
@@ -92,6 +111,26 @@ Nguồn: [variants](https://developer.adobe.com/commerce/webapi/graphql/schema/c
 - Cú pháp (theo doc):  
   `variants(sku: String!, optionIds: [String!], pageSize: Int, cursor: String): ProductViewVariantResults`  
   Bắt buộc **SKU**; tùy chọn **`optionIds`**, **`pageSize`**, **`cursor`** (phân trang).
+
+---
+
+## 9. `recommendations` (Product Recommendations)
+
+Nguồn: [recommendations](https://developer.adobe.com/commerce/webapi/graphql/schema/product-recommendations/queries/recommendations/)
+
+- Mục đích: trả về các **khối gợi ý sản phẩm** (recommendation units) theo ngữ cảnh như SKU hiện tại, trang hiện tại, lịch sử xem/mua, giỏ hàng.
+- Cú pháp (theo doc):  
+  `recommendations(currentSku: String, userPurchaseHistory: [PurchaseHistory], userViewHistory: [ViewHistory], cartSkus: [String], category: String, pageType: PageType): Recommendations`
+- Output chính:
+  - `totalResults`
+  - `results[]` (mỗi unit có `unitId`, `unitName`, `typeId`, `storefrontLabel`, `displayOrder`, `productsView[]`...)
+- Header bắt buộc theo Adobe:
+  - `Magento-Customer-Group` (mã group dạng `sha1(<customer_group_id>)`, có giá trị mẫu cho group mặc định)
+  - `Magento-Environment-Id`, `Magento-Store-Code`, `Magento-Store-View-Code`, `Magento-Website-Code`
+  - `X-Api-Key` cho môi trường PaaS/on-prem
+- Lưu ý triển khai:
+  - Adobe ghi rõ query này không hỗ trợ `alternateEnvironmentId`.
+  - Để dữ liệu storefront đầy đủ, merchant cần bật cả Product Recommendations và Catalog Service (theo trang query Adobe).
 
 ---
 

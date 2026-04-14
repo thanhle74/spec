@@ -1,6 +1,6 @@
-# GraphQL — Schema (Guide): Checkout (queries)
+# GraphQL — Schema (Guide): Checkout
 
-Tóm tắt nhóm **Checkout** trên Adobe: **queries** dùng khi hoàn tất checkout (điều khoản, token thanh toán đã lưu, URL PayPal hosted / Payflow Link). **Mutations** checkout (Braintree, Klarna, PayPal, …) nằm cùng nhóm trên sidebar — trong file này chỉ **queries** §3–§6; mục lục mutations → [Checkout](https://developer.adobe.com/commerce/webapi/graphql/schema/checkout/). Chi tiết field: từng link **Nguồn**.  
+Tóm tắt nhóm **Checkout** trên Adobe: **queries** dùng cho điều khoản, token thanh toán đã lưu, URL PayPal hosted / Payflow Link; **mutations** dùng tạo / xử lý token thanh toán cho các cổng online (Braintree, Klarna, PayPal, …). Trong file này: queries §2–§6; mutations §7–§13. Chi tiết field: từng link **Nguồn**.  
 **Chữ ký theo bản:** [GraphQL API reference](https://developer.adobe.com/commerce/webapi/graphql/reference/) — xem [`reference.md`](./reference.md).
 
 ---
@@ -71,6 +71,84 @@ Nguồn: [getPayflowLinkToken](https://developer.adobe.com/commerce/webapi/graph
 - Lỗi (theo doc): ví dụ **No such entity with cartId** khi `cart_id` không hợp lệ.
 
 ---
+
+## 7. Checkout — danh sách mutations (mục lục)
+
+Nguồn: [Checkout mutations](https://developer.adobe.com/commerce/webapi/graphql/schema/checkout/mutations/)
+
+- Nhóm mutation này tạo / quản lý payment token để hoàn tất checkout cho cổng online.
+- Nếu cài **Payment Services** (>= 2.3.0), Adobe có thêm mutation như `createPaymentOrder`, `syncPaymentOrder` (không nằm trong danh sách §8–§13 dưới đây).
+
+| Mutation | Nguồn Adobe | Trong file này |
+|----------|-------------|----------------|
+| `createBraintreeClientToken` | [create-braintree-client-token](https://developer.adobe.com/commerce/webapi/graphql/schema/checkout/mutations/create-braintree-client-token/) | §8 |
+| `createKlarnaPaymentsSession` | [create-klarna-payments-session](https://developer.adobe.com/commerce/webapi/graphql/schema/checkout/mutations/create-klarna-payments-session/) | §9 |
+| `createPayflowProToken` | [create-payflow-pro-token](https://developer.adobe.com/commerce/webapi/graphql/schema/checkout/mutations/create-payflow-pro-token/) | §10 |
+| `createPaypalExpressToken` | [create-paypal-express-token](https://developer.adobe.com/commerce/webapi/graphql/schema/checkout/mutations/create-paypal-express-token/) | §11 |
+| `deletePaymentToken` | [delete-payment-token](https://developer.adobe.com/commerce/webapi/graphql/schema/checkout/mutations/delete-payment-token/) | §12 |
+| `handlePayflowProResponse` | [handle-payflow-pro-response](https://developer.adobe.com/commerce/webapi/graphql/schema/checkout/mutations/handle-payflow-pro-response/) | §13 |
+
+---
+
+## 8. `createBraintreeClientToken`
+
+Nguồn: [createBraintreeClientToken](https://developer.adobe.com/commerce/webapi/graphql/schema/checkout/mutations/create-braintree-client-token/)
+
+- Tạo client token để khởi tạo Braintree JavaScript SDK.
+- Cú pháp (theo doc): `createBraintreeClientToken: String`
+- Lỗi thường gặp: Braintree payment method chưa active trên admin.
+
+---
+
+## 9. `createKlarnaPaymentsSession`
+
+Nguồn: [createKlarnaPaymentsSession](https://developer.adobe.com/commerce/webapi/graphql/schema/checkout/mutations/create-klarna-payments-session/)
+
+- **PaaS only** + mutation này được Adobe ghi rõ là **không còn hỗ trợ** do Klarna Vendor Bundled Extension bị gỡ từ 2.4.4.
+- Nếu vẫn tham chiếu hệ cũ: mutation khởi tạo phiên Klarna, trả `client_token` và danh sách `payment_method_categories`; khi set payment dùng `payment_method.code` dạng `klarna_<identifier>` cùng token từ response.
+- Cú pháp guide: `createKlarnaPaymentsSession(input: CreateKlarnaPaymentsSessionInput): CreateKlarnaPaymentsSessionOutput` (đối chiếu reference bản bạn dùng).
+
+---
+
+## 10. `createPayflowProToken`
+
+Nguồn: [createPayflowProToken](https://developer.adobe.com/commerce/webapi/graphql/schema/checkout/mutations/create-payflow-pro-token/)
+
+- **PaaS only**. Khởi tạo giao dịch Payflow Pro và nhận token.
+- Input cần các URL tương đối (`return_url`, `cancel_url`, `error_url`) để Magento ghép base URL thành URL đầy đủ.
+- Cú pháp (theo doc): `createPayflowProToken(input: PayflowProTokenInput): CreatePayflowProTokenOutput`
+
+---
+
+## 11. `createPaypalExpressToken`
+
+Nguồn: [createPaypalExpressToken](https://developer.adobe.com/commerce/webapi/graphql/schema/checkout/mutations/create-paypal-express-token/)
+
+- **PaaS only**. Bắt đầu authorize cho PayPal Express Checkout / Payflow Pro with Express Checkout / Payflow Link with Express Checkout.
+- Input `urls` chứa URL tương đối (`return_url`, `cancel_url`) để hệ thống tạo URL đầy đủ; response trả token và `paypal_urls` (`start`, `edit`).
+- Token này được dùng ở bước `setPaymentMethodOnCart` tiếp theo.
+- Cú pháp (theo doc): `createPaypalExpressToken(input: PaypalExpressTokenInput): PaypalExpressTokenOutput`
+
+---
+
+## 12. `deletePaymentToken`
+
+Nguồn: [deletePaymentToken](https://developer.adobe.com/commerce/webapi/graphql/schema/checkout/mutations/delete-payment-token/)
+
+- Xoá payment token khỏi hệ thống (token lấy từ query `customerPaymentTokens`).
+- Cần header customer authorization token.
+- Cú pháp (theo doc): `deletePaymentToken(public_hash: String!): DeletePaymentTokenOutput`
+- Lỗi thường gặp: `public_hash` không tồn tại hoặc customer chưa authorized.
+
+---
+
+## 13. `handlePayflowProResponse`
+
+Nguồn: [handlePayflowProResponse](https://developer.adobe.com/commerce/webapi/graphql/schema/checkout/mutations/handle-payflow-pro-response/)
+
+- **PaaS only**. Gửi lại payload silent post từ Payflow Pro gateway về Magento để hệ thống xử lý kết quả giao dịch.
+- Payload thay đổi theo quốc gia merchant, sản phẩm, billing/shipping, v.v. (Adobe có ví dụ payload dài).
+- Cú pháp (theo doc): `handlePayflowProResponse(input: PayflowProResponseInput!): PayflowProResponseOutput`
 
 ## Liên kết
 
