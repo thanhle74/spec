@@ -70,7 +70,7 @@ Chỉ tính năng nào cần, mới thêm folder tương ứng. Không tạo fol
 ## 4. Ngôn ngữ và Format
 
 - Tên class, method, variable: tiếng Anh
-- Comment giải thích logic: tiếng Việt hoặc tiếng Anh đều được
+- Comment giải thích logic: tiếng Anh
 - Commit message: tiếng Anh
 - Spec, plan, task: tiếng Việt
 - **Document Tags (PHPDoc):**

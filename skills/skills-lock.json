@@ -1,0 +1,190 @@
+{
+  "version": 1,
+  "skills": {
+    "ddev-magento": {
+      "source": "chuccv/ddev-skill",
+      "sourceType": "github",
+      "computedHash": "2fe92f2ab73e5b7cf90e2e5787c7d5cfadc023a7f79eda893b051b59e12180d9"
+    },
+    "magento-alpine-specialist": {
+      "source": "maxnorm/magento2-agent-skills",
+      "sourceType": "github",
+      "computedHash": "85ea4afe88d19048af80be19a44a334e59a390ec268912a8e99435dd0373d368"
+    },
+    "magento-api-developer": {
+      "source": "maxnorm/magento2-agent-skills",
+      "sourceType": "github",
+      "computedHash": "7204e3531014718a53fb78a6258a671f61b0546ac38a43f867d1bce677efc226"
+    },
+    "magento-cache-analyst": {
+      "source": "maxnorm/magento2-agent-skills",
+      "sourceType": "github",
+      "computedHash": "bbbc58ed5434523a88796fc35ac991c29089c177c284c4e133754d2ec9e870db"
+    },
+    "magento-catalog-specialist": {
+      "source": "maxnorm/magento2-agent-skills",
+      "sourceType": "github",
+      "computedHash": "f279370598fbf498fbcc95ba1b43ef2a4c409e10b396c91f824d812e1112c015"
+    },
+    "magento-code-reviewer": {
+      "source": "maxnorm/magento2-agent-skills",
+      "sourceType": "github",
+      "computedHash": "78037b7627795139096aafb8ea36f67ddff250cdac8317374f0d09b6923edb38"
+    },
+    "magento-configuration-specialist": {
+      "source": "maxnorm/magento2-agent-skills",
+      "sourceType": "github",
+      "computedHash": "17422b6d3f1ab60b7ccd0ec51e4b18a42f45eb302315b63ebbaf19f6ea789d64"
+    },
+    "magento-cronjob-developer": {
+      "source": "maxnorm/magento2-agent-skills",
+      "sourceType": "github",
+      "computedHash": "6d03898bf410c2403d06656a451575f2335cf046f965ef6b7475c88d13615c2d"
+    },
+    "magento-css-specialist": {
+      "source": "maxnorm/magento2-agent-skills",
+      "sourceType": "github",
+      "computedHash": "638dafb8afb3692665586b5827903f3357d0ac623a8eea9bdbb71c47f748404b"
+    },
+    "magento-deployment-engineer": {
+      "source": "maxnorm/magento2-agent-skills",
+      "sourceType": "github",
+      "computedHash": "118ec665f666abcc26fe7bbdc3776099a5de313e0cc92d1be2c1fa0ad5dce550"
+    },
+    "magento-environment-engineer": {
+      "source": "maxnorm/magento2-agent-skills",
+      "sourceType": "github",
+      "computedHash": "0bcf1f171d1e603da65fd76805154c31839958f926d73858a6710caf3fecc1d8"
+    },
+    "magento-feature-developer": {
+      "source": "maxnorm/magento2-agent-skills",
+      "sourceType": "github",
+      "computedHash": "6eda5f8d4827751675749bf947cd32199f7282906c0d809c360c4ab78ccb5d30"
+    },
+    "magento-frontend-developer": {
+      "source": "maxnorm/magento2-agent-skills",
+      "sourceType": "github",
+      "computedHash": "1be941437f6781136c5becc67b69db48c30b361f2e3adc55c4bb886a071aa5d1"
+    },
+    "magento-graphql": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "computedHash": "e89f8944a7e27785727e2bd268c6829bcf60f329dd758a42e90a83e51002d651"
+    },
+    "magento-hyva-specialist": {
+      "source": "maxnorm/magento2-agent-skills",
+      "sourceType": "github",
+      "computedHash": "0d2d14a1fcfd032533074739146ae815504dd806bdde2332ab3a747b4566b986"
+    },
+    "magento-index-analyst": {
+      "source": "maxnorm/magento2-agent-skills",
+      "sourceType": "github",
+      "computedHash": "7a52e278f487bff6be1da415383e00df9f1d95a20cbbc2647e6a2ca31ea38aae"
+    },
+    "magento-indexing-caching": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "computedHash": "53fc1a64f29d3346572d6c8b632e5aa2753232f889078e350f71c49838e9d2a8"
+    },
+    "magento-issue-debugger": {
+      "source": "maxnorm/magento2-agent-skills",
+      "sourceType": "github",
+      "computedHash": "78a9f2626449869ddcc1385b09298f74665daccfd24f64991aeea84db28fb9e7"
+    },
+    "magento-knockout-specialist": {
+      "source": "maxnorm/magento2-agent-skills",
+      "sourceType": "github",
+      "computedHash": "14f17ae72ff8cf73ef876d296c9f1b53c1ad24828336a4f78d775a074eb68771"
+    },
+    "magento-local-environment-specialist": {
+      "source": "maxnorm/magento2-agent-skills",
+      "sourceType": "github",
+      "computedHash": "86dacb41f279ace3ebb1f097d9b2e943f15399114e119ea10280569da2af8a18"
+    },
+    "magento-luma-specialist": {
+      "source": "maxnorm/magento2-agent-skills",
+      "sourceType": "github",
+      "computedHash": "b91d82d3e7e8b5bd5e4fdf3e577f4bad3a09a0de29e735aa009f640730799fde"
+    },
+    "magento-magewire-specialist": {
+      "source": "maxnorm/magento2-agent-skills",
+      "sourceType": "github",
+      "computedHash": "98d39077c148d127b11153f5f6e0aab80c53125f2487571309845eb8f3398c9e"
+    },
+    "magento-model-developer": {
+      "source": "maxnorm/magento2-agent-skills",
+      "sourceType": "github",
+      "computedHash": "d531422413076f442b4ac77cef6e1794ad4a115eae664c979ff3b3ea396dc3d5"
+    },
+    "magento-module-developer": {
+      "source": "maxnorm/magento2-agent-skills",
+      "sourceType": "github",
+      "computedHash": "ea9537414fe3de96b77c5fbae4b5bbf9ed804dfb736c41051497f7767086798d"
+    },
+    "magento-module-development": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "computedHash": "a10438df5ed965283790db5844786810e18843cda94f2231e9e2d202bd33328a"
+    },
+    "magento-multi-store": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "computedHash": "67779f7d3c5b13a40bf6f44bff5a21dda2af648f7725e91094b3d742d4b9c455"
+    },
+    "magento-order-specialist": {
+      "source": "maxnorm/magento2-agent-skills",
+      "sourceType": "github",
+      "computedHash": "28672f7c0a719fc30cafe183e665d5f13817587fb84bf9940230082a350488ba"
+    },
+    "magento-performance-analyst": {
+      "source": "maxnorm/magento2-agent-skills",
+      "sourceType": "github",
+      "computedHash": "9e5de533bf800faeb608d9937dbf3f59f659bacd784587f60b8d60092f68dba2"
+    },
+    "magento-php-specialist": {
+      "source": "maxnorm/magento2-agent-skills",
+      "sourceType": "github",
+      "computedHash": "4ddefb5c60cf0fbc5c621b15b07c41d7c6f33c384deb3525af81a64dec75fad0"
+    },
+    "magento-requirejs-specialist": {
+      "source": "maxnorm/magento2-agent-skills",
+      "sourceType": "github",
+      "computedHash": "bbc4b80556dd1b58ad1361bdd0f3bc2103bbbe21855f90319e7cec6930080c86"
+    },
+    "magento-security-analyst": {
+      "source": "maxnorm/magento2-agent-skills",
+      "sourceType": "github",
+      "computedHash": "23bda70f588935dd451b93207e9d9c60d15328ddadaad8f5c33eb04767db2453"
+    },
+    "magento-theme-developer": {
+      "source": "maxnorm/magento2-agent-skills",
+      "sourceType": "github",
+      "computedHash": "31e903e9177fe18310096d4b1d3ab693f5fe472d6979033c5c7cf4a14fb59c09"
+    },
+    "magento-ui-component-developer": {
+      "source": "maxnorm/magento2-agent-skills",
+      "sourceType": "github",
+      "computedHash": "b8dc0b6dd9ea74ae9b60c2b81e53ad82f249ce23f5e08ccdd6722228fc3f5942"
+    },
+    "magento-upgrade-specialist": {
+      "source": "maxnorm/magento2-agent-skills",
+      "sourceType": "github",
+      "computedHash": "249a204d3a729f3a2b7fe2bcf6fa7272e261d96ccd16ef77dbd9c1c0577fa70c"
+    },
+    "magento-xml-specialist": {
+      "source": "maxnorm/magento2-agent-skills",
+      "sourceType": "github",
+      "computedHash": "085fd7003ad5d68fcbcd8d5193f3a7bc6ba84a9d386bb7acfdfdccb3f956e1ad"
+    },
+    "magento2-backend-toolkit": {
+      "source": "tuanhaviet22/magento-skills",
+      "sourceType": "github",
+      "computedHash": "e992bb282a50c2f8c1c069850cb48cbfe1d43309f10d0078bcc3ad30cb322ea6"
+    },
+    "magento2-widget-creation": {
+      "source": "proxiblue/claude-skills",
+      "sourceType": "github",
+      "computedHash": "7d8879b84a9a9f6905043b14b316a0464476a2d21bd6aeb30ad0ef456c7c5134"
+    }
+  }
+}

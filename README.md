@@ -18,6 +18,10 @@
 │
 └── tasks/
     └── <tên-feature>.md         # Danh sách task (AI tạo)
+│
+└── skills/
+    ├── README.md                # Danh sách skills dùng cho project
+    └── skills-list.md           # Skill registry + lệnh cài + cách dùng
 ```
 
 ## Quy trình làm việc
@@ -41,7 +45,8 @@
 ```
 Đọc file .spec/config/constitution.md và .spec/config/magento-patterns.md
 Sau đó đọc spec tại .spec/specs/<tên-feature>.md
-Xác nhận bạn hiểu đúng requirements trước khi làm gì.
+Nếu task cần review/implement/debug, chọn skill phù hợp theo hướng dẫn trong `.spec/skills/skills-list.md`.
+Xác nhận bạn hiểu đúng requirements + review scope trước khi làm gì.
 ```
 
 ### Khi đã có plan và tasks:
@@ -61,3 +66,10 @@ Kiểm tra code của module <tên-module> theo checklist.
 
 "Dựa theo quy chuẩn trong thư mục .spec/, hãy tạo data patch..."
 https://experienceleague.adobe.com/en/docs/commerce
+
+## Skills cho project
+
+Quản lý skill theo project tại:
+
+- `.spec/skills/README.md`
+- `.spec/skills/skills-list.md`
