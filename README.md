@@ -47,6 +47,9 @@
 Sau đó đọc spec tại .spec/specs/<tên-feature>.md
 Nếu task cần review/implement/debug, chọn skill phù hợp theo hướng dẫn trong `.spec/skills/skills-list.md`.
 Xác nhận bạn hiểu đúng requirements + review scope trước khi làm gì.
+Nêu rõ phạm vi được phép sửa: <files/module>.
+Thực hiện và báo cáo: (1) files changed, (2) lý do thay đổi, (3) verify steps đã chạy.
+Nếu thiếu thông tin quan trọng, hỏi lại trước khi sửa code.
 ```
 
 ### Khi đã có plan và tasks:
