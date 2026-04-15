@@ -27,8 +27,7 @@
     ├── task-contract.md                 # Template chung anti-vibe coding
     ├── task-contract-crud-module.md     # Mẫu task CRUD admin module
     ├── task-contract-graphql-field.md   # Mẫu task GraphQL field
-    ├── task-contract-rest-endpoint.md   # Mẫu task REST endpoint
-    └── spec-business-testcase-first.md  # Mẫu spec: business-first + testcase-first
+    └── task-contract-rest-endpoint.md   # Mẫu task REST endpoint
 ```
 
 ## Quy trình làm việc
@@ -44,6 +43,25 @@
 - Dùng kebab-case: `customer-phone.md`, `custom-shipping.md`
 - Tên file trùng nhau giữa specs/, plans/, tasks/ để dễ theo dõi
 - Ví dụ: specs/customer-phone.md -> plans/customer-phone.md -> tasks/customer-phone.md
+
+## Quick Start (dễ tiếp cận)
+
+Nếu chưa quen spec dài, bắt đầu bằng yêu cầu business ngắn:
+
+```text
+Feature: <tên ngắn>
+Bối cảnh/vấn đề: <đau ở đâu>
+Kết quả mong muốn: <muốn đạt gì>
+Phạm vi biết chắc: <module/file nếu có, không có thì để trống>
+Deadline/Priority: <nếu có>
+```
+
+AI sẽ đi cùng bạn theo từng bước ngắn:
+
+1. Hỏi lại thông tin quan trọng để chốt scope.
+2. Dựng spec theo thứ tự: business -> acceptance criteria -> testcase -> plan.
+3. Chờ bạn xác nhận rồi mới implement.
+4. Test lại theo testcase và báo cáo kết quả.
 
 ## Cách nói chuyện với AI
 
@@ -72,10 +90,18 @@ Nếu thiếu thông tin quan trọng, hỏi lại trước khi sửa code.
 Đọc file .spec/config/constitution.md và .spec/config/magento-patterns.md
 Sau đó đọc spec tại .spec/specs/<tên-feature>.md
 Nếu task cần review/implement/debug, chọn skill phù hợp theo hướng dẫn trong `.spec/skills/skills-list.md`.
-Xác nhận bạn hiểu đúng requirements + review scope trước khi làm gì.
-Nêu rõ phạm vi được phép sửa: <files/module>.
-Thực hiện và báo cáo: (1) files changed, (2) lý do thay đổi, (3) verify steps đã chạy.
-Nếu thiếu thông tin quan trọng, hỏi lại trước khi sửa code.
+
+Trước khi làm:
+1) Xác nhận bạn hiểu đúng requirements + review scope.
+2) Nêu rõ phạm vi được phép sửa: <files/module>.
+3) Nếu thiếu thông tin quan trọng, hỏi lại trước khi sửa code.
+4) Đề xuất ngắn 1-2 hướng giải pháp và khuyến nghị hướng phù hợp theo business impact.
+
+Khi thực hiện:
+- Ưu tiên business analysis trước, viết testcase (happy/edge/negative) trước hoặc song song.
+
+Khi báo cáo:
+(1) files changed, (2) lý do thay đổi, (3) verify steps đã chạy, (4) kết quả theo testcase.
 ```
 
 ### Khi đã có plan và tasks:
