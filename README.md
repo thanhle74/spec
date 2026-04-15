@@ -23,9 +23,9 @@ Phạm vi biết chắc: <module/file nếu có, không có thì để trống>
 
 1. Đọc `.spec/config/constitution.md` và `.spec/config/magento-patterns.md`.
 2. Tạo/cập nhật spec tại `.spec/specs/<ten-feature>.md`.
-3. Xác nhận requirement + nêu rõ scope file/module trước khi code.
+3. Xác nhận requirement + nêu rõ scope file/module trước khi code (theo Scope Governance).
 4. Nếu thiếu thông tin quan trọng: hỏi lại trước khi sửa code.
-5. Implement + verify theo testcase, rồi báo cáo kết quả.
+5. Implement + verify theo testcase, rồi báo cáo kết quả theo DoD.
 
 ## Output bắt buộc
 
@@ -33,6 +33,7 @@ Phạm vi biết chắc: <module/file nếu có, không có thì để trống>
 2. `lý do thay đổi`
 3. `verify steps đã chạy`
 4. `kết quả testcase`
+5. `xác nhận đạt Definition of Done (DoD)`
 
 ## Prompt nhanh theo ngữ cảnh
 
@@ -64,6 +65,7 @@ Kiểm tra code của module <tên-module> theo checklist.
 
 - Rules: `.spec/config/constitution.md`
 - Magento patterns: `.spec/config/magento-patterns.md`
+- DoD + Scope Governance: xem trong `.spec/config/constitution.md`
 - Checklist: `.spec/config/checklist.md`
 - Skills map: `.spec/skills/skills-list.md`
 - Spec template: `.spec/specs/_template.md`

@@ -2,10 +2,10 @@
 
 ## Thông tin project
 
-- Magento: 2.4.8
+- Magento: 2.4.8-p4
 - PHP: 8.3
-- Vendor: NullTraceX
-- Namespace gốc: NullTraceX\<TênModule>
+- Vendor: Theo module thực tế (ví dụ: `Secomm`, `NullTraceX`)
+- Namespace gốc: `<Vendor>\<ModuleName>`
 
 ---
 
@@ -116,6 +116,70 @@ Chỉ tính năng nào cần, mới thêm folder tương ứng. Không tạo fol
 - Khai báo trong `etc/di.xml` và `etc/webapi.xml` (nếu cần expose REST/GraphQL)
 
 ---
+
+## 9. Scope Governance (bắt buộc)
+
+- Trước khi code, phải chốt rõ phạm vi file/module được phép sửa.
+- KHÔNG sửa ngoài scope đã chốt nếu chưa được xác nhận lại.
+- Nếu phát sinh sửa ngoài scope (do dependency/bug liên quan), phải báo và xin xác nhận trước khi sửa.
+
+---
+
+## 10. Testing Policy
+
+- Mỗi task phải có verify steps rõ ràng (command + manual steps nếu có).
+- Với feature thay đổi behavior nghiệp vụ, bắt buộc có testcase tối thiểu theo nhóm:
+  - Happy path
+  - Edge case
+  - Negative case
+- Kết quả verify phải được báo theo testcase: Pass/Fail + ghi chú ngắn.
+
+---
+
+## 11. Definition of Done (DoD)
+
+Task chỉ được xem là hoàn thành khi đạt đủ:
+
+1. Đúng acceptance criteria trong spec/task contract.
+2. Không vi phạm rule trong constitution + magento-patterns.
+3. Đã chạy verify steps và báo kết quả rõ ràng.
+4. Báo cáo cuối có đủ:
+   - Files changed
+   - Lý do thay đổi
+   - Verify steps đã chạy
+   - Kết quả testcase
+
+---
+
+## 12. Git/PR Convention
+
+- Branch name (khuyến nghị): `<type>/<feature-kebab-case>` (ví dụ: `feat/product-shipping-method`).
+- Commit message: tiếng Anh, ngắn gọn, nêu rõ ý nghĩa thay đổi.
+- PR description tối thiểu:
+  - Mục tiêu business
+  - Scope thay đổi
+  - Test/verify đã chạy
+  - Rủi ro còn lại (nếu có)
+
+---
+
+## 13. Security & Performance Baseline
+
+- Không log dữ liệu nhạy cảm (token, password, secret key, PII không cần thiết).
+- Luôn validate input nhận từ frontend/API trước khi xử lý.
+- Tránh N+1 query và query không có index ở các luồng đọc lớn.
+- Chỉ thêm cache khi có lợi ích rõ ràng và có invalidation strategy phù hợp.
+- Với external integration/API call: có timeout hợp lý và xử lý lỗi rõ ràng.
+
+---
+
+## 14. Versioning & Backward Compatibility
+
+- Tránh breaking changes trên interface/public API nếu không có kế hoạch migration.
+- Nếu buộc phải thay đổi behavior public:
+  - Ghi rõ impact trong spec/task
+  - Nêu phương án tương thích hoặc migration
+  - Cập nhật tài liệu liên quan
 
 ## Liên kết
 
