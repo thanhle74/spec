@@ -15,7 +15,7 @@
 - `app/code/<Vendor>/<Module>/etc/schema.graphqls`
 - `app/code/<Vendor>/<Module>/Model/Resolver/*`
 - `app/code/<Vendor>/<Module>/etc/di.xml`
-- `app/code/<Vendor>/<Module>/etc/module.xml` (neu can)
+- `app/code/<Vendor>/<Module>/etc/module.xml` (nếu cần)
 
 ## 4) Out of scope
 

@@ -1,15 +1,15 @@
 # Skills Registry for `.spec`
 
-Thu muc nay dung de quan ly cac Agent Skills su dung trong project Magento.
+Thư mục này dùng để quản lý các Agent Skills sử dụng trong project Magento.
 
-Muc tieu:
+Mục tiêu:
 
-- Giu mot danh sach skills on dinh theo project.
-- Chuan hoa cach team goi skill trong prompt.
-- Tach biet "quy trinh lam viec" (skills) va "nguon su that" (spec/docs trong `.spec/config` va `.spec/specs`).
+- Giữ một danh sách skills ổn định theo project.
+- Chuẩn hóa cách team gọi skill trong prompt.
+- Tách biệt "quy trình làm việc" (skills) và "nguồn sự thật" (spec/docs trong `config/` và `features/`).
 
-Nguyen tac:
+Nguyên tắc:
 
-- Skills KHONG thay the noi dung trong `.spec`.
-- Skills bo tro quy trinh (review, module dev, checklist).
-- Moi thay doi danh sach skills can cap nhat file `skills-list.md`.
+- Skills KHÔNG thay thế nội dung trong `.spec`.
+- Skills bổ trợ quy trình (review, module dev, checklist).
+- Mọi thay đổi danh sách skills cần cập nhật file `skills-list.md`.

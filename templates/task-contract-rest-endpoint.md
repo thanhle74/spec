@@ -14,7 +14,7 @@
 
 - `app/code/<Vendor>/<Module>/etc/webapi.xml`
 - `app/code/<Vendor>/<Module>/Api/*`
-- `app/code/<Vendor>/<Module>/Api/Data/*` (neu can)
+- `app/code/<Vendor>/<Module>/Api/Data/*` (nếu cần)
 - `app/code/<Vendor>/<Module>/Model/*`
 - `app/code/<Vendor>/<Module>/etc/di.xml`
 

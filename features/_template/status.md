@@ -3,6 +3,7 @@
 > Quy tắc: chỉ giữ thông tin hiện tại. Không ghi lại toàn bộ lịch sử thảo luận.
 
 - Current stage: `<draft | spec-approved | planning | implementing | review | done>`
+- Spec version: `<1.0.0>`
 - Owner: `<name/team>`
 - Last updated: `<YYYY-MM-DD>`
 

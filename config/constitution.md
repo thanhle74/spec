@@ -1,5 +1,7 @@
 # Constitution - Quy tắc phát triển chung
 
+> version: 1.1.0 | last_updated: 2026-04-15
+
 ## Thông tin project
 
 - Magento: 2.4.8-p4

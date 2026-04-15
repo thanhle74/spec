@@ -1,5 +1,7 @@
 # Magento Patterns - Các pattern bắt buộc tuân theo
 
+> version: 1.1.0 | last_updated: 2026-04-15
+
 Tham khảo từ: [constitution.md](../constitution.md)
 
 ---
@@ -183,4 +185,7 @@ Vendor/Module/
 - [UI Components](./references/frontend/ui-components.md)
 - [View Models](./references/frontend/frontend-view-models.md)
 - [Admin UI Grid](./references/frontend/admin-ui-grid.md)
+
+### 📖 Reference
+- [Glossary — Domain terms](./glossary.md)
 
