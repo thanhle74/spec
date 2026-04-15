@@ -111,3 +111,5 @@ Ví dụ: `ko.contextFor($0).$data` — truy cập view model field (vd. `name` 
 
 - Kiến trúc tổng quan: [ui-components.md](./ui-components.md)
 - Thư viện component: [ui-component-library.md](./ui-component-library.md)
+- JavaScript init scripts (`x-magento-init`, `data-mage-init`): [javascript-init-scripts.md](./javascript-init-scripts.md)
+- Advanced JS series (KO + mixins + widget override): [advanced-javascript-series.md](./advanced-javascript-series.md)

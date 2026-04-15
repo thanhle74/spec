@@ -174,5 +174,6 @@ interface EmployeeSearchResultsInterface extends SearchResultsInterface
 ## Liên kết
 
 - DI & Code Generation: xem [di-codegen.md](./di-codegen.md)
+- Series nền tảng PHP MVC Developers: xem [php-mvc-developer-series.md](./php-mvc-developer-series.md)
 - Quy tắc chung: xem [../constitution.md](../constitution.md)
 - Các pattern: xem [../magento-patterns.md](../magento-patterns.md)
