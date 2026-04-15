@@ -47,6 +47,7 @@ Nguồn chính:
 ## 3) Practical notes cho project này
 
 - Khi generate module mới, có thể dùng Pestle để tạo boilerplate nhanh, rồi chuẩn hóa lại theo conventions trong `.spec`.
+- Xem thêm bộ tài liệu Pestle chi tiết: [pestle-series.md](./pestle-series.md).
 - Không lệ thuộc hoàn toàn vào generator output; luôn verify:
   - namespace/path consistency,
   - ACL-resource mapping,

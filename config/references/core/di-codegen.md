@@ -220,5 +220,6 @@ public function find(string $id): Entity
 ## Liên kết
 
 - Plugin: xem [plugins.md](./plugins.md)
+- Object Manager series map: xem [object-manager-series.md](./object-manager-series.md)
 - Quy tắc chung: xem [../constitution.md](../constitution.md)
 - Các pattern: xem [../magento-patterns.md](../magento-patterns.md)

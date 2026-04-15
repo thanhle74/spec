@@ -110,4 +110,7 @@ Checklist khi sửa widget:
 
 - [JavaScript init scripts](./javascript-init-scripts.md)
 - [UI Components — How-to & Debug](./ui-components-howto.md)
+- [UI Components full series (13 bài)](./ui-components-series.md)
+- [uiElement Internals series (6 bài)](./uielement-internals-series.md)
 - [Thư viện JavaScript UI Components](./ui-components-js-library.md)
+- [Magento Front End 2020 series (React/PWA/UPWARD/Hyva)](./magento-frontend-2020-series.md)
