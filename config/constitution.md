@@ -1,6 +1,6 @@
 # Constitution - Quy tắc phát triển chung
 
-> version: 1.1.0 | last_updated: 2026-04-15
+> version: 1.1.1 | last_updated: 2026-04-16
 
 ## Thông tin project
 
@@ -29,7 +29,7 @@
   - O: Mở rộng bằng plugin/event, không sửa core.
   - L: Subclass phải thay thế được parent.
   - I: Interface nhỏ, cụ thể, không ép implement method thừa.
-  - D: Inject dependency qua constructor, không `new` trực tiếp (trừ DTO/Exceptions).
+  - D: Inject dependency qua constructor, không `new` trực tiếp trong code nghiệp vụ.
 - **Object Readiness:** Object phải sẵn sàng sử dụng ngay sau khi `__construct`. Không dùng hàm `init()` hoặc `load()` công khai.
 - **Constructor Logic:** Chỉ chứa phép gán (assignment) và kiểm soát tham số. Không thực hiện logic nghiệp vụ hay dispatch Event trong constructor.
 - **Exceptions (Ngoại lệ):**
@@ -38,6 +38,10 @@
   - Không dùng Exception để điều khiển luồng logic nghiệp vụ.
   - Khi dùng tài nguyên (file, stream), bắt buộc có `finally` để giải phóng.
 - **DI (Dependency Injection):** Qua `di.xml`, KHÔNG dùng ObjectManager trực tiếp.
+- **No direct instantiation policy (bắt buộc):**
+  - Cấm `new` trong `Model/`, `Service/`, `Plugin/`, `Observer/`, `Controller/`, `Resolver/`, `ViewModel/`.
+  - Nếu cần tạo object theo runtime data (vd secret key/token/input động), phải tạo qua factory/wrapper được inject bằng DI.
+  - Ngoại lệ duy nhất: class factory/wrapper chuyên dụng của chính module để tạo object bên thứ ba; không đặt logic nghiệp vụ trong factory đó.
 - **Composition hơn inheritance.**
 - **::class Keyword:** Luôn dùng `ClassName::class` thay vì dùng chuỗi string cho tên class.
 

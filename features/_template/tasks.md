@@ -20,6 +20,18 @@
   - `<command/manual step>`
   - `<expected result>`
 
+## Rule bổ sung khi task có `before*` plugin trả về tham số
+- Acceptance criteria bắt buộc:
+  - `Không unset() bất kỳ tham số nào sẽ xuất hiện trong return array cho method gốc`
+- Verify bắt buộc:
+  - `Smoke/API: gọi endpoint liên quan (vd GraphQL) không còn warning Undefined variable`
+
+## Rule bổ sung khi task có class inject logger (PSR-3)
+- Acceptance criteria bắt buộc:
+  - `Constructor type-hint Psr\Log\LoggerInterface, không Magento\Psr\Log\LoggerInterface`
+- Verify bắt buộc:
+  - `bin/magento setup:di:compile` (bắt lỗi wiring sớm)
+
 ## Rule bổ sung khi task có sửa `etc/adminhtml/system.xml`
 - Acceptance criteria bắt buộc:
   - `Section/group/field hiển thị đúng trong Admin theo menu path đã chỉ rõ`

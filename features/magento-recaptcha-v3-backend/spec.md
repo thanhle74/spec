@@ -16,6 +16,8 @@
   - `Service riêng gọi Google siteverify API, parse response, trả kết quả chuẩn hoá cho layer nghiệp vụ.`
   - `Validation gate trước business logic: token invalid/fail -> từ chối request với message/error code rõ ràng.`
   - `Logging mức phù hợp cho case fail/network error (không log secret key/token raw đầy đủ).`
+  - `Contract request headless phase 1: FE gửi `X-ReCaptcha` (token) + `X-ReCaptcha-Action` (action) trong cùng request login/register.`
+  - `Bật/tắt guard theo config core Google reCAPTCHA Storefront tương ứng từng form key customer; disable thì không phá flow hiện tại.`
 - Out-of-scope:
   - `Code tích hợp FE Next.js (load site key, lấy token ở client).`
   - `Thay đổi business logic lõi ngoài phần guard verify.`
@@ -47,6 +49,8 @@
   - `Validation phase 1: `score >= 0.5` + `action` đúng với flow.`
   - `Kỹ thuật: tách module riêng theo hướng reusable, nhưng dùng config core Magento reCAPTCHA (không tạo system config mới ở phase 1).`
   - `Secret key cấu hình qua system/env config, không hardcode.`
+  - `Config domain cho customer flow: Google reCAPTCHA Storefront (không dùng Google reCAPTCHA Admin Panel).`
+  - `Để mở rộng flow (vd contact us), dùng mapping tập trung `flow_code -> form_key + action`; plugin chỉ gọi theo flow_code.`
 - Phạm vi được phép sửa:
   - `app/code/<Vendor>/<ModuleRecaptcha>/**` (module riêng cho reCAPTCHA guard/adapter)
   - `etc/di.xml`, service/model/plugin/controller/resolver liên quan trong scope endpoint`

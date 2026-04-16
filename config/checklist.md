@@ -11,8 +11,11 @@ Tham khảo từ: constitution.md, magento-patterns.md
 - [ ] Không có ObjectManager::getInstance()
 - [ ] Không có code chết, code comment out
 - [ ] Không có `exit`, `die`, `var_dump`, `print_r`
-- [ ] Dependency inject qua constructor, không `new` trực tiếp
+- [ ] Dependency inject qua constructor, không `new` trực tiếp trong code nghiệp vụ
+- [ ] Không có `new` trong `Model/Service/Plugin/Observer/Controller/Resolver/ViewModel`; nếu cần tạo object động thì qua DI factory/wrapper
+- [ ] Nếu có third-party object (vd reCAPTCHA validator): đã tạo qua DI factory/wrapper, không `new` ngay trong service
 - [ ] Type-hint constructor DI khớp chính xác với parent class/interface đang kế thừa (đúng namespace class)
+- [ ] Logger: inject `Psr\Log\LoggerInterface`, **không** dùng `Magento\Psr\Log\LoggerInterface` (tránh lỗi compile DI)
 - [ ] Exception cụ thể, không dùng \Exception chung
 
 ## 2. Cấu trúc Module
@@ -48,7 +51,16 @@ Tham khảo từ: constitution.md, magento-patterns.md
 - [ ] Plugin có sortOrder
 - [ ] Plugin tên đúng convention: `<vendor>_<module>_<mô_tả>`
 - [ ] Hạn chế dùng `around` plugin
+- [ ] `before` plugin: nếu `return` mảng tham số → **không** `unset()` các biến đó (tránh `Undefined variable` / lỗi GraphQL)
 - [ ] Observer chỉ làm 1 việc
+
+## 6.1 Headless reCAPTCHA (khi task có scope này)
+
+- [ ] Đang dùng config core **Google reCAPTCHA Storefront** cho flow customer; không map nhầm sang `Google reCAPTCHA Admin Panel`
+- [ ] Contract request đã rõ và thống nhất FE/BE: `X-ReCaptcha` + `X-ReCaptcha-Action`
+- [ ] Có mapping tập trung `flow_code -> form_key + action` (không hardcode lặp trong nhiều plugin)
+- [ ] Verify cả 2 mode: config disable -> bypass; config enable -> token thiếu/sai action bị chặn
+- [ ] Với flow mới (vd contact us): đã xác nhận đúng `form_key` core trước khi triển khai
 
 ## 7. Config
 

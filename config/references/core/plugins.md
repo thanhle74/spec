@@ -82,6 +82,11 @@ Chạy **trước** method gốc. Dùng để thay đổi tham số đầu vào.
 - Các tham số sau: giống method gốc
 - **Trả về mảng** các tham số đã sửa, hoặc `null` nếu không sửa
 
+### Cảnh báo — không `unset` tham số rồi `return`
+
+- Trong `before*`, nếu bạn `return [$a, $b, ...]` thì **không** được `unset($a)`, `unset($b)`, v.v. Magento sẽ dùng mảng trả về làm tham số mới; biến đã `unset` gây `Undefined variable` (thường lộ qua GraphQL dưới dạng warning/error).
+- Đừng dùng `unset($subject, ...)` cho mọi tham số chỉ để im lặng cảnh báo “unused”: bỏ `unset` hoặc dùng công cụ static analysis/annotation đúng cách; `$subject` không dùng vẫn **phải** nằm trong signature.
+
 ### Ví dụ - Sửa tham số trước khi gọi method gốc:
 
 ```php

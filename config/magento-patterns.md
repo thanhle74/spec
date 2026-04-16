@@ -1,6 +1,6 @@
 # Magento Patterns - Các pattern bắt buộc tuân theo
 
-> version: 1.1.0 | last_updated: 2026-04-15
+> version: 1.1.3 | last_updated: 2026-04-16
 
 Tham khảo từ: [constitution.md](../constitution.md)
 
@@ -20,6 +20,8 @@ Tham khảo chi tiết: xem [core/plugins.md](./references/core/plugins.md)
 - Đặt trong folder `Plugin/`.
 - Tên class: `<TargetClass><MôTả>Plugin.php`.
 - Khai báo trong `etc/di.xml`.
+- **`before` plugin:** nếu method trả về `array` để truyền lại tham số cho method gốc, **không được** `unset()` bất kỳ tham số nào trong mảng đó (kể cả để “tránh unused variable”). `unset` làm biến mất trước `return` → cảnh báo/lỗi runtime (vd: `Undefined variable` trong GraphQL). Chỉ `return [$arg1, $arg2, ...]` đúng thứ tự; tham số không dùng vẫn giữ nguyên tên trong signature.
+- **`before` plugin:** muốn “chỉ chạy side effect” và không đổi tham số → khai báo return `void` hoặc `null` theo đúng contract interception (xem `references/core/plugins.md`); không được vừa `unset` tham số vừa `return` cùng các tham số đó.
 
 ---
 
@@ -80,6 +82,29 @@ Tham khảo chi tiết: xem [ops/maintenance-cli.md](./references/ops/maintenanc
 ### Message Queues
 Tham khảo chi tiết: xem [network/message-queues.md](./references/network/message-queues.md)
 - Xử lý bất đồng bộ (Asynchronous) các tác vụ nặng.
+
+### Constructor DI — Logger (PSR-3)
+
+- Khi inject logger qua constructor, **luôn** type-hint `Psr\Log\LoggerInterface` (PSR-3).
+- **Không** type-hint `Magento\Psr\Log\LoggerInterface` hoặc class/interface logger khác không được `di.xml` global preference map — dễ gây lỗi generate code: `Impossible to process constructor argument ... LoggerInterface`.
+- Magento core và pattern carrier chuẩn cũng dùng `Psr\Log\LoggerInterface`; bám theo đó cho module tùy chỉnh.
+- Sau khi thêm/sửa constructor: chạy `bin/magento setup:di:compile` để bắt sớm lỗi wiring.
+
+### No `new` in business code
+
+- Cấm dùng `new` trực tiếp trong class nghiệp vụ (`Model/Service/Plugin/Observer/Controller/Resolver/ViewModel`).
+- Với thư viện bên thứ ba cần input runtime (vd reCAPTCHA secret key), tạo qua factory/wrapper inject bằng DI.
+- Khi code review, phải rà direct instantiation và thay bằng factory/wrapper trước khi merge.
+
+### Headless reCAPTCHA guard pattern
+
+- Ưu tiên đọc config từ **Google reCAPTCHA Storefront** cho flow customer-facing (`customer_login`, `customer_create`, ...). Không dùng cấu hình `Google reCAPTCHA Admin Panel` cho customer API flow.
+- Contract FE/BE cho headless API: reCAPTCHA truyền qua HTTP header:
+  - `X-ReCaptcha`: token
+  - `X-ReCaptcha-Action`: action string
+- Giữ mapping `flow_code -> {form_key, action}` tập trung (ví dụ trong `di.xml` + class config), không hardcode lặp trong từng plugin.
+- Hành vi khi disable config core: guard phải bypass an toàn (không phá flow hiện tại). Hành vi khi enable: thiếu token/action mismatch phải fail theo policy.
+- Khi thêm flow mới (ví dụ `contact_us`): bắt buộc xác nhận đúng `form_key` core Magento trước khi wiring plugin.
 
 ---
 

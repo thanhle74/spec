@@ -24,6 +24,8 @@
      - cờ enable theo form/flow (nếu core hỗ trợ mapping flow tương ứng)
    - Fallback behavior:
      - thiếu secret key hoặc config bắt buộc -> fail verification theo policy fail-closed.
+   - Lưu ý domain cấu hình:
+     - customer login/register lấy từ nhóm cấu hình **Google reCAPTCHA Storefront**, không dùng config `Google reCAPTCHA Admin Panel`.
 
 3. **Verify token qua Google API**
    - Endpoint: `https://www.google.com/recaptcha/api/siteverify`.
@@ -39,6 +41,9 @@
    - Cách áp dụng:
      - Plugin `before/around` lên service login/register hiện có, hoặc gọi verifier trực tiếp trong service handler của endpoint.
      - Lấy `recaptcha_token` từ request payload/header theo contract FE-BE đã chốt.
+     - Chuẩn header phase 1: `X-ReCaptcha` + `X-ReCaptcha-Action`.
+     - Tổ chức mapping tập trung `flow_code -> {form_key, action}` (DI config) để mở rộng flow mà không sửa logic verifier.
+     - Với `before` plugin trả về mảng tham số: không `unset()` các tham số đó (tránh `Undefined variable` khi gọi GraphQL). Chi tiết: `config/magento-patterns.md` § Plugin.
    - Trả lỗi thống nhất khi fail verify (HTTP/API error code rõ ràng, message an toàn).
 
 5. **Observability + security**
@@ -63,6 +68,7 @@
   - Chốt endpoint map trước khi code Task 3.
   - Viết lớp config adapter có check rõ “missing config” + message nội bộ.
   - Timeout ngắn + message lỗi rõ cho FE retry hợp lý.
+  - DI logger: type-hint `Psr\Log\LoggerInterface` trong constructor; **không** dùng `Magento\Psr\Log\LoggerInterface` (lỗi compile: `Impossible to process constructor argument ... LoggerInterface`). Chi tiết: `config/magento-patterns.md` — Constructor DI — Logger.
 - Rollback:
   - Disable module `Secomm_RecaptchaGuard` hoặc tạm tháo plugin binding tại flow login/register.
   - `bin/magento cache:flush` sau rollback.
