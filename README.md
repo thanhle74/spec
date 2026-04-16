@@ -65,6 +65,7 @@ Phạm vi biết chắc: <module/file nếu có, không có thì để trống>
 
 ```text
 Follow .spec workflow in this repo.
+Project: laybyland
 Feature: <tên ngắn>
 Bối cảnh/vấn đề: <đau ở đâu>
 Kết quả mong muốn: <muốn đạt gì>
@@ -120,6 +121,25 @@ Kết quả mong muốn: <muốn đạt gì>
 Phạm vi biết chắc: <module/file, business rules đã chốt>
 Dùng lại spec tại features/<tên-feature>/spec.md và implement lại từ đầu.
 ```
+
+---
+
+## Cấu trúc thư mục
+
+```
+.spec/
+├── config/          → core rules (bưng đi dự án nào cũng được)
+├── skills/          → agent skills
+├── examples/        → blueprints + module skeleton
+├── templates/       → task contracts
+├── features/        → core features (reusable)
+└── projects/
+    └── <tên-project>/   → project-specific
+        ├── glossary.md  → thuật ngữ domain riêng
+        └── features/    → features của project này
+```
+
+> Khi bưng `.spec/` sang dự án mới: giữ nguyên tất cả, chỉ tạo folder `projects/<tên-project-mới>/` mới.
 
 ---
 
