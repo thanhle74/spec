@@ -20,6 +20,16 @@
   - `<command/manual step>`
   - `<expected result>`
 
+## Rule bổ sung khi task có sửa `etc/adminhtml/system.xml`
+- Acceptance criteria bắt buộc:
+  - `Section/group/field hiển thị đúng trong Admin theo menu path đã chỉ rõ`
+  - `Có resource ACL hợp lệ; role test truy cập được`
+  - `Nếu giữ key config cũ khi đổi vị trí UI: đã dùng config_path`
+- Verify bắt buộc:
+  - `bin/magento cache:clean config`
+  - `bin/magento cache:flush`
+  - `Manual: vào đúng menu path Admin, xác nhận thấy field và lưu config thành công`
+
 ## Completion report format
 1. Files changed
 2. Lý do thay đổi

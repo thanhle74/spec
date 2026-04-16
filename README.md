@@ -30,6 +30,21 @@ Kết quả mong muốn: <muốn đạt gì>
 Phạm vi biết chắc: <module/file nếu có>
 ```
 
+### Bắt đầu feature có sửa Admin system config
+
+```text
+Follow .spec workflow in this repo.
+Feature: <tên ngắn>
+Bối cảnh/vấn đề: <đau ở đâu>
+Kết quả mong muốn: <muốn đạt gì>
+Phạm vi biết chắc: <module/file nếu có>
+Áp dụng Admin System Config Pattern trong config/magento-patterns.md:
+- section riêng + tab vendor
+- có resource ACL
+- dùng config_path nếu cần giữ key cũ
+- verify cache/config UI sau khi sửa
+```
+
 ### Làm task đã có sẵn
 
 ```text

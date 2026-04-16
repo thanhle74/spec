@@ -53,8 +53,16 @@ Tham khảo từ: constitution.md, magento-patterns.md
 ## 7. Config
 
 - [ ] Section trong system.xml: `<vendor>_<module>`
+- [ ] **Không gắn group mới trực tiếp vào section core** (`sales`, `catalog`, ...) nếu không thật sự cần; ưu tiên section riêng + tab riêng của vendor
+- [ ] Nếu buộc phải đặt field ở section core, phải có verify hiển thị UI ngay sau khi deploy
+- [ ] `system.xml` có `resource` hợp lệ và role admin test có quyền tương ứng
+- [ ] Nếu đổi cấu trúc section/group nhưng giữ config key cũ, dùng `config_path` để đảm bảo backward compatibility
 - [ ] Có giá trị mặc định trong `config.xml`
 - [ ] Đọc config qua Helper/Config model
+- [ ] Verify thủ công đường dẫn config trong Admin (ghi rõ menu path)
+- [ ] Chạy cache refresh cho config sau khi đổi `system.xml`:
+  - `bin/magento cache:clean config`
+  - `bin/magento cache:flush`
 
 ## 8. Testing (khi cần)
 

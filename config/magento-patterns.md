@@ -83,6 +83,18 @@ Tham khảo chi tiết: xem [network/message-queues.md](./references/network/mes
 
 ---
 
+## 7. Admin System Config Pattern (`etc/adminhtml/system.xml`)
+
+- Ưu tiên tạo section riêng theo module (`<vendor>_<module>`) và gắn vào tab vendor (vd: `secomm`), thay vì nhét group mới vào section core như `sales`.
+- Với field có thể đổi vị trí UI nhưng cần giữ key cũ, bắt buộc dùng `<config_path>` để giữ tương thích dữ liệu.
+- Luôn khai báo `<resource>` đúng ACL resource của module; nếu thiếu quyền, config sẽ không hiện dù XML đúng.
+- Sau khi đổi `system.xml`, verify theo thứ tự:
+  1) `bin/magento cache:clean config`
+  2) `bin/magento cache:flush`
+  3) kiểm tra đúng menu path trong Admin bằng role có quyền.
+
+---
+
 ## 7. Carrier (Shipping Method) Pattern
 
 Áp dụng khi tạo custom shipping carrier kế thừa `Magento\Shipping\Model\Carrier\AbstractCarrier`.
