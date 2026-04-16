@@ -22,6 +22,29 @@
 
 ---
 
+## Checklist trước khi gõ "OK spec"
+
+Trước khi gõ `OK spec`, hãy tự hỏi:
+
+- [ ] Acceptance criteria đúng và đủ chưa? Không bị thiếu case quan trọng?
+- [ ] Scope in/out-of-scope rõ ràng chưa? Biết chắc cái gì làm, cái gì không làm?
+- [ ] Decision/approach đã chốt chưa? Không còn câu hỏi mở nào?
+
+Nếu chưa chắc → hỏi lại AI, đừng OK vội.
+
+## Checklist trước khi gõ "OK implement"
+
+Trước khi gõ `OK implement`, hãy tự hỏi:
+
+- [ ] Technical approach trong `plan.md` hợp lý chưa? Risk nào chưa được xử lý?
+- [ ] Danh sách task đủ chưa? Thứ tự có hợp lý không?
+- [ ] Verify steps trong từng task đủ để kiểm tra kết quả không?
+- [ ] Scope file/module được phép sửa đã chốt rõ chưa?
+
+Nếu chưa chắc → hỏi lại AI, đừng OK vội.
+
+---
+
 ## Quick Start (30 giây)
 
 Copy block này khi mở chat mới:
