@@ -96,16 +96,6 @@ Tham khảo chi tiết: xem [network/message-queues.md](./references/network/mes
 - Với thư viện bên thứ ba cần input runtime (vd reCAPTCHA secret key), tạo qua factory/wrapper inject bằng DI.
 - Khi code review, phải rà direct instantiation và thay bằng factory/wrapper trước khi merge.
 
-### Headless reCAPTCHA guard pattern
-
-- Ưu tiên đọc config từ **Google reCAPTCHA Storefront** cho flow customer-facing (`customer_login`, `customer_create`, ...). Không dùng cấu hình `Google reCAPTCHA Admin Panel` cho customer API flow.
-- Contract FE/BE cho headless API: reCAPTCHA truyền qua HTTP header:
-  - `X-ReCaptcha`: token
-  - `X-ReCaptcha-Action`: action string
-- Giữ mapping `flow_code -> {form_key, action}` tập trung (ví dụ trong `di.xml` + class config), không hardcode lặp trong từng plugin.
-- Hành vi khi disable config core: guard phải bypass an toàn (không phá flow hiện tại). Hành vi khi enable: thiếu token/action mismatch phải fail theo policy.
-- Khi thêm flow mới (ví dụ `contact_us`): bắt buộc xác nhận đúng `form_key` core Magento trước khi wiring plugin.
-
 ---
 
 ## 7. Admin System Config Pattern (`etc/adminhtml/system.xml`)

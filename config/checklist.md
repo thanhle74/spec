@@ -54,14 +54,6 @@ Tham khảo từ: constitution.md, magento-patterns.md
 - [ ] `before` plugin: nếu `return` mảng tham số → **không** `unset()` các biến đó (tránh `Undefined variable` / lỗi GraphQL)
 - [ ] Observer chỉ làm 1 việc
 
-## 6.1 Headless reCAPTCHA (khi task có scope này)
-
-- [ ] Đang dùng config core **Google reCAPTCHA Storefront** cho flow customer; không map nhầm sang `Google reCAPTCHA Admin Panel`
-- [ ] Contract request đã rõ và thống nhất FE/BE: `X-ReCaptcha` + `X-ReCaptcha-Action`
-- [ ] Có mapping tập trung `flow_code -> form_key + action` (không hardcode lặp trong nhiều plugin)
-- [ ] Verify cả 2 mode: config disable -> bypass; config enable -> token thiếu/sai action bị chặn
-- [ ] Với flow mới (vd contact us): đã xác nhận đúng `form_key` core trước khi triển khai
-
 ## 7. Config
 
 - [ ] Đã ưu tiên dùng config core Magento cho domain tương ứng trước khi tạo config mới
