@@ -1,4 +1,4 @@
-E1 # Feature Spec - custom-order-status
+# Feature Spec - custom-order-status
 
 ## 1) Feature input
 - Feature: `custom-order-status`
