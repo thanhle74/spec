@@ -112,6 +112,17 @@ Scope: <file/module bị ảnh hưởng>
 > AI sẽ bỏ qua "OK spec", fix ngay. Vẫn giữ unit test + code review.
 > Bắt buộc cleanup spec/plan đầy đủ trong vòng 1-2 ngày sau.
 
+### Hỏi có tham khảo spec/code (không tạo file)
+
+```text
+Q: <câu hỏi>
+```
+
+> AI sẽ đọc `.spec/config/references`, `.spec/examples`, code liên quan trước khi trả lời.
+> Không tạo spec/plan/task, không trigger workflow.
+
+---
+
 ### Xác nhận update spec trong lúc implement
 
 ```text
