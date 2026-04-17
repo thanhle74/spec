@@ -65,7 +65,7 @@ Phạm vi biết chắc: <module/file nếu có, không có thì để trống>
 
 ```text
 Follow .spec workflow in this repo.
-Project: laybyland
+Project: <tên-project>
 Feature: <tên ngắn>
 Bối cảnh/vấn đề: <đau ở đâu>
 Kết quả mong muốn: <muốn đạt gì>
@@ -112,14 +112,16 @@ Scope: <file/module bị ảnh hưởng>
 > AI sẽ bỏ qua "OK spec", fix ngay. Vẫn giữ unit test + code review.
 > Bắt buộc cleanup spec/plan đầy đủ trong vòng 1-2 ngày sau.
 
+### Làm lại từ đầu (code đã bị xoá)
 
 ```text
 Follow .spec workflow in this repo.
+Project: <tên-project>
 Feature: <tên ngắn>
 Bối cảnh/vấn đề: <đau ở đâu>
 Kết quả mong muốn: <muốn đạt gì>
 Phạm vi biết chắc: <module/file, business rules đã chốt>
-Dùng lại spec tại features/<tên-feature>/spec.md và implement lại từ đầu.
+Dùng lại spec tại projects/<tên-project>/features/<tên-feature>/spec.md và implement lại từ đầu.
 ```
 
 ---

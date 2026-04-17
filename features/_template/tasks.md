@@ -15,6 +15,7 @@
   - `<test case 1 — happy path>`
   - `<test case 2 — edge/negative>`
 - Implement: `<path>`
+- Reference đọc trước khi implement: `config/references/<domain>/<pattern>.md`
 - Verify sau implement:
   - `./vendor/bin/phpunit <test-path>` → all pass
   - `<manual step nếu cần>`
