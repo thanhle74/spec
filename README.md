@@ -112,6 +112,18 @@ Scope: <file/module bị ảnh hưởng>
 > AI sẽ bỏ qua "OK spec", fix ngay. Vẫn giữ unit test + code review.
 > Bắt buộc cleanup spec/plan đầy đủ trong vòng 1-2 ngày sau.
 
+### Xác nhận update spec trong lúc implement
+
+```text
+OK update spec
+```
+
+> AI phát hiện vấn đề trong lúc implement → ghi vào `status.md` section `⚠️ Pending Clarification` → DỪNG chờ xác nhận.
+> Gõ `OK update spec` để cho phép AI cập nhật `spec.md`/`plan.md`.
+> Gõ `Skip` để bỏ qua, `Defer` để ghi backlog xử lý sau.
+
+---
+
 ### Làm lại từ đầu (code đã bị xoá)
 
 ```text
