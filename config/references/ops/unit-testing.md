@@ -119,7 +119,123 @@ Mục tiêu:
 
 ---
 
-## 7) ObjectManager Unit Helper (khi cần)
+## 7) Mock Repository và Service Class (patterns thực chiến)
+
+### A. Mock Repository cơ bản
+
+```php
+<?php
+declare(strict_types=1);
+
+namespace Vendor\Module\Test\Unit\Model;
+
+use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\MockObject\MockObject;
+use Vendor\Module\Model\EntityService;
+use Vendor\Module\Api\EntityRepositoryInterface;
+use Vendor\Module\Api\Data\EntityInterface;
+use Magento\Framework\Exception\NoSuchEntityException;
+
+class EntityServiceTest extends TestCase
+{
+    private EntityService $sut;
+    private EntityRepositoryInterface&MockObject $repositoryMock;
+
+    protected function setUp(): void
+    {
+        $this->repositoryMock = $this->createMock(EntityRepositoryInterface::class);
+        $this->sut = new EntityService($this->repositoryMock);
+    }
+
+    public function testGetEntityReturnsEntity(): void
+    {
+        $entityId = 1;
+        $entityMock = $this->createMock(EntityInterface::class);
+        $entityMock->method('getId')->willReturn($entityId);
+
+        $this->repositoryMock
+            ->expects($this->once())
+            ->method('getById')
+            ->with($entityId)
+            ->willReturn($entityMock);
+
+        $result = $this->sut->getEntity($entityId);
+        $this->assertSame($entityMock, $result);
+    }
+
+    public function testGetEntityThrowsWhenNotFound(): void
+    {
+        $this->repositoryMock
+            ->method('getById')
+            ->willThrowException(new NoSuchEntityException(__('Entity not found')));
+
+        $this->expectException(NoSuchEntityException::class);
+        $this->sut->getEntity(999);
+    }
+}
+```
+
+### B. Mock với data provider
+
+```php
+/**
+ * @dataProvider priceDataProvider
+ */
+public function testCalculateDiscount(float $price, float $discount, float $expected): void
+{
+    $result = $this->sut->calculateDiscount($price, $discount);
+    $this->assertEqualsWithDelta($expected, $result, 0.001);
+}
+
+public static function priceDataProvider(): array
+{
+    return [
+        'zero discount'    => [100.0, 0.0, 100.0],
+        'ten percent'      => [100.0, 10.0, 90.0],
+        'full discount'    => [100.0, 100.0, 0.0],
+        'negative price'   => [-10.0, 10.0, -9.0],  // edge case
+    ];
+}
+```
+
+### C. Mock Logger (Psr\Log\LoggerInterface)
+
+```php
+use Psr\Log\LoggerInterface;
+
+$loggerMock = $this->createMock(LoggerInterface::class);
+$loggerMock->expects($this->once())
+    ->method('error')
+    ->with($this->stringContains('Failed'));
+
+$this->sut = new MyService($repositoryMock, $loggerMock);
+```
+
+### D. ObjectManager Helper (khi constructor quá nhiều dependency)
+
+```php
+use Magento\Framework\TestFramework\Unit\Helper\ObjectManager;
+
+protected function setUp(): void
+{
+    $objectManager = new ObjectManager($this);
+
+    // Tự động mock tất cả dependencies
+    $this->sut = $objectManager->getObject(
+        EntityService::class,
+        [
+            // Override dependency cụ thể cần control
+            'entityRepository' => $this->createMock(EntityRepositoryInterface::class),
+        ]
+    );
+}
+```
+
+**Lưu ý:** Chỉ dùng ObjectManager Helper khi constructor có nhiều dependency (≥ 5). Ưu tiên inject thủ công để test rõ ràng hơn.
+
+---
+
+## 7a) ObjectManager Unit Helper (khi cần)
 
 `Magento\Framework\TestFramework\Unit\Helper\ObjectManager` có thể giúp dựng SUT nhanh khi constructor quá nhiều dependency.
 

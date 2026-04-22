@@ -129,7 +129,17 @@
 | Plugin disabled: di.xml disabled="true", area-specific disable | 2026-04-22 | Tích hợp vào `config/references/core/plugin-patterns.md` (§8) |
 | Plugin on interface vs class: best practice | 2026-04-22 | Tích hợp vào `config/references/core/plugin-patterns.md` (§9) |
 | Blueprint: Custom REST API với pagination + filtering | 2026-04-22 | Tạo `examples/integration/custom-rest-api-pagination-blueprint.md`; cập nhật `examples/INDEX.md` |
-| Blueprint: GraphQL mutation với input validation | 2026-04-22 | Tạo `examples/integration/graphql-mutation-input-validation-blueprint.md`; cập nhật `examples/INDEX.md` |
+| Admin grid: filters, mass actions, inline edit, bookmarks | 2026-04-23 | Cập nhật `config/references/frontend/admin-ui-grid.md` (thêm §5-8: mass actions, inline edit, bookmarks, debug tips) |
+| Checkout steps: custom step, payment renderer, shipping method renderer | 2026-04-23 | Tạo mới `config/references/frontend/checkout-steps.md` |
+| Admin form: fieldset, field types, dependencies, dynamic rows | 2026-04-23 | Tạo mới `config/references/frontend/admin-form.md` |
+| LESS/CSS: extend, mixin, variables, critical CSS, theme inheritance | 2026-04-23 | Tạo mới `config/references/frontend/less-css.md` |
+| RabbitMQ: exchange, queue, binding, dead letter, management UI | 2026-04-23 | Tạo mới `config/references/infrastructure/rabbitmq.md` |
+| Unit test: mock ObjectManager, mock Repository, data provider | 2026-04-23 | Cập nhật `config/references/ops/unit-testing.md` (thêm §7: mock repository/service patterns) |
+| Integration test: fixtures, rollback, database isolation | 2026-04-23 | Đã có đầy đủ trong `config/references/ops/testing-guide.md` — không cần update thêm |
+| Order management: hold/unhold, cancel, reorder, partial invoice/ship | 2026-04-23 | Tạo mới `config/references/business/order-management-advanced.md` |
+| Admin security: brute force protection, session lifetime, IP whitelist | 2026-04-23 | Tạo mới `config/references/security/admin-security.md` |
+| API token: integration token, customer token, admin token lifecycle | 2026-04-23 | Tích hợp vào `config/references/security/admin-security.md` (§4-6) |
+| Static analysis: PHPStan, PHPMD, Magento coding standard (PHPCS) | 2026-04-23 | Tạo mới `config/references/ops/static-analysis.md` |
 
 ---
 
@@ -153,19 +163,19 @@
 ### Frontend
 - ~~RequireJS: mixins, map, shim, bundles, async loading~~ ✅ Done
 - ~~KnockoutJS: observable, computed, custom binding, component lifecycle~~ ✅ Done
-- Checkout steps: custom step, payment renderer, shipping method renderer
-- Admin form: fieldset, field types, dependencies, dynamic rows
-- Admin grid: filters, mass actions, inline edit, bookmarks
-- LESS/CSS: extend, mixin, variables, critical CSS, theme inheritance
+- ~~Checkout steps: custom step, payment renderer, shipping method renderer~~ ✅ Done
+- ~~Admin form: fieldset, field types, dependencies, dynamic rows~~ ✅ Done
+- ~~Admin grid: filters, mass actions, inline edit, bookmarks~~ ✅ Done
+- ~~LESS/CSS: extend, mixin, variables, critical CSS, theme inheritance~~ ✅ Done
 - ~~Luma theme: parent theme override, _module.less, _extend.less~~ ✅ Done
-- Pager/Toolbar: product list toolbar, sort, limit, custom toolbar
+- ~~Pager/Toolbar: product list toolbar, sort, limit, custom toolbar~~ ✅ Done
 
 ### Business / Domain
 - ~~Catalog price: price waterfall, custom price modifier, group price~~ ✅ Done
 - ~~Cart rules: condition combine, action types, coupon generation~~ ✅ Done
 - ~~Tax: tax class, tax rule, FPT, display settings, store config~~ ✅ Done
 - Shipping: rate request, rate result, free shipping, table rates
-- Order management: hold/unhold, cancel, reorder, partial invoice/ship
+- ~~Order management: hold/unhold, cancel, reorder, partial invoice/ship~~ ✅ Done
 - Return/RMA: return request, item condition, resolution (Commerce)
 - Gift card: account, balance, usage (Commerce)
 - Reward points: earn/spend rules, balance, expiry (Commerce)
@@ -174,28 +184,28 @@
 
 ### Infrastructure / DevOps
 - ~~Varnish: VCL config, ESI, cache purge, X-Magento-Tags~~ ✅ Done
-- RabbitMQ: exchange, queue, binding, dead letter, management UI
-- MySQL: query optimization, EXPLAIN, slow query log, connection pool
+- ~~RabbitMQ: exchange, queue, binding, dead letter, management UI~~ ✅ Done
+- ~~MySQL: query optimization, EXPLAIN, slow query log, connection pool~~ ✅ Done
 - New Relic: APM integration, custom attributes, transaction naming
 - Blackfire: profiling, assertions, CI integration
-- Xdebug: step debug, profiling, remote debug Docker/DDEV
+- ~~Xdebug: step debug, profiling, remote debug Docker/DDEV~~ ✅ Done
 - Docker/DDEV: service config, custom commands, Xdebug toggle
 - CI/CD: GitHub Actions / GitLab CI cho Magento, ECE-tools
 - Cloud (Adobe Commerce Cloud): ece-tools, .magento.env.yaml, patches
 - Monitoring: health check endpoint, cron health, queue health
 
 ### Security
-- Admin security: brute force protection, session lifetime, IP whitelist
-- API token: integration token, customer token, admin token lifecycle
+- ~~Admin security: brute force protection, session lifetime, IP whitelist~~ ✅ Done
+- ~~API token: integration token, customer token, admin token lifecycle~~ ✅ Done
 - Encryption: key rotation, sensitive config, env.php
 - File permissions: var/, pub/, generated/ — production vs dev
 - Dependency confusion: composer package naming, private packagist
 
 ### Testing & Quality
-- Unit test: mock ObjectManager, mock Repository, data provider
-- Integration test: fixtures, rollback, database isolation
+- ~~Unit test: mock ObjectManager, mock Repository, data provider~~ ✅ Done
+- ~~Integration test: fixtures, rollback, database isolation~~ ✅ Done
 - API functional test: WebApiAbstract, REST/GraphQL test
-- Static analysis: PHPStan, PHPMD, Magento coding standard (PHPCS)
+- ~~Static analysis: PHPStan, PHPMD, Magento coding standard (PHPCS)~~ ✅ Done
 - Mutation testing: infection/phpunit, score interpretation
 - Load testing: k6, JMeter cho Magento checkout flow
 
@@ -221,15 +231,15 @@
 - ~~Strategy pattern: pool of strategies, dynamic selection via DI~~ ✅ Done
 - ~~Composite pattern: CompositeInterface, chaining processors~~ ✅ Done
 - ~~Pipeline pattern: processor chain, SortedList, PipelineInterface~~ ✅ Done
-- Specification pattern: business rule objects, isSatisfiedBy
+- ~~Specification pattern: business rule objects, isSatisfiedBy~~ ✅ Done
 - Event Sourcing: domain events, event store, replay
 - CQRS: separate read/write models trong Magento context
 - Saga pattern: distributed transaction, compensating actions
-- Decorator pattern: wrapping service với extra behavior
+- ~~Decorator pattern: wrapping service với extra behavior~~ ✅ Done
 - ~~Null Object pattern: tránh null check, default implementation~~ ✅ Done
 
 ### Data Layer
-- Collection vs Repository: khi nào dùng cái nào, performance trade-off
+- ~~Collection vs Repository: khi nào dùng cái nào, performance trade-off~~ ✅ Done
 - ~~SearchCriteria deep dive: FilterGroup logic (AND/OR), SortOrder, PageSize~~ ✅ Done
 - ~~Custom SearchResults: SearchResultsInterface, TotalCount~~ ✅ Done
 - ~~Database transaction: beginTransaction, commit, rollback trong ResourceModel~~ ✅ Done
@@ -241,7 +251,19 @@
 - ~~Schema migration: alter column safely, zero-downtime migration~~ ✅ Done
 
 ### API / Integration
-- Async REST API: bulk endpoint, /async/bulk, UUID tracking
+| Async REST API: bulk endpoint, /async/bulk, UUID tracking | 2026-04-23 | Tạo mới `config/references/network/async-rest-api.md` |
+| Specification pattern: business rule objects, isSatisfiedBy | 2026-04-23 | Tích hợp vào `config/references/core/advanced-patterns.md` (§11) |
+| Collection vs Repository: khi nào dùng cái nào, performance trade-off | 2026-04-23 | Tích hợp vào `config/references/core/advanced-patterns.md` (§12) |
+| Decorator pattern: wrapping service với extra behavior | 2026-04-23 | Tích hợp vào `config/references/core/advanced-patterns.md` (§13) |
+| Converter pattern: toDataModel, toArray, hydrator | 2026-04-23 | Tích hợp vào `config/references/core/advanced-patterns.md` (§14) |
+| Mapper pattern: DB row → Data Object mapping | 2026-04-23 | Tích hợp vào `config/references/core/advanced-patterns.md` (§14) |
+| Hydrator pattern: populate object từ array data | 2026-04-23 | Tích hợp vào `config/references/core/advanced-patterns.md` (§14) |
+| Pager/Toolbar: product list toolbar, sort, limit, custom toolbar | 2026-04-23 | Tạo mới `config/references/frontend/pager-toolbar.md` |
+| Xdebug: step debug, profiling, remote debug Docker/DDEV | 2026-04-23 | Tích hợp vào `config/references/core/debugging-troubleshooting.md` (§11) |
+| MySQL: query optimization, EXPLAIN, slow query log, connection pool | 2026-04-23 | Đã có trong `config/references/core/debugging-troubleshooting.md` (§8) — không cần update thêm |
+| Pestle: module scaffold, di.xml generation, common commands | 2026-04-23 | Tạo mới `config/references/ops/tooling.md` (§1) |
+| n98-magerun2: common commands, custom commands, scripting | 2026-04-23 | Tích hợp vào `config/references/ops/tooling.md` (§2) |
+| PHPStorm Magento plugin: DI navigation, plugin generation, inspections | 2026-04-23 | Tích hợp vào `config/references/ops/tooling.md` (§3) |
 - Webhook: outbound webhook, retry, signature verification
 - OAuth 1.0a: integration token flow, consumer key/secret
 - JWT: customer token structure, expiry, refresh
@@ -371,11 +393,11 @@
 - ~~Registry pattern: Magento\Framework\Registry — legacy, cách thay thế~~ ✅ Done
 - Action pool: array of actions, dynamic dispatch
 - ~~Modifier pattern: UI Component modifier, pool modifier~~ ✅ Done
-- Converter pattern: toDataModel, toArray, hydrator
+- ~~Converter pattern: toDataModel, toArray, hydrator~~ ✅ Done
 - ~~Validator chain: ValidatorInterface, CompositeValidator~~ ✅ Done
 - ~~Processor chain: ProcessorInterface, sorted processor pool~~ ✅ Done
-- Mapper pattern: DB row → Data Object mapping
-- Hydrator pattern: populate object từ array data
+- ~~Mapper pattern: DB row → Data Object mapping~~ ✅ Done
+- ~~Hydrator pattern: populate object từ array data~~ ✅ Done
 
 ### Debugging & Troubleshooting (thực chiến)
 - Xdebug step debug: breakpoint, watch, call stack trong PhpStorm
@@ -390,10 +412,10 @@
 - ~~Cache corruption: symptoms, flush strategy, cache backend check~~ ✅ Done
 
 ### Code Generation & Tooling
-- Pestle: module scaffold, di.xml generation, common commands
+- ~~Pestle: module scaffold, di.xml generation, common commands~~ ✅ Done
 - Mage2Gen: online generator, module skeleton
-- n98-magerun2: common commands, custom commands, scripting
-- PHPStorm Magento plugin: DI navigation, plugin generation, inspections
+- ~~n98-magerun2: common commands, custom commands, scripting~~ ✅ Done
+- ~~PHPStorm Magento plugin: DI navigation, plugin generation, inspections~~ ✅ Done
 - PHP CS Fixer: Magento ruleset, auto-fix, CI integration
 - PHPStan: Magento extension, level config, baseline
 - Rector: automated refactoring, Magento-specific rules

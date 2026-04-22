@@ -726,8 +726,356 @@ foreach ($this->getProductsInBatches() as $product) {
 
 ---
 
+## 11. Specification pattern — business rule objects
+
+Specification pattern biến business conditions thành objects có thể compose.
+
+```php
+<?php
+declare(strict_types=1);
+
+namespace Vendor\Module\Model\Specification;
+
+/**
+ * Base specification interface
+ */
+interface SpecificationInterface
+{
+    public function isSatisfiedBy(mixed $candidate): bool;
+
+    public function and(self $other): self;
+
+    public function or(self $other): self;
+
+    public function not(): self;
+}
+
+/**
+ * Abstract base với composite logic
+ */
+abstract class AbstractSpecification implements SpecificationInterface
+{
+    public function and(SpecificationInterface $other): SpecificationInterface
+    {
+        return new AndSpecification($this, $other);
+    }
+
+    public function or(SpecificationInterface $other): SpecificationInterface
+    {
+        return new OrSpecification($this, $other);
+    }
+
+    public function not(): SpecificationInterface
+    {
+        return new NotSpecification($this);
+    }
+}
+
+class AndSpecification extends AbstractSpecification
+{
+    public function __construct(
+        private readonly SpecificationInterface $left,
+        private readonly SpecificationInterface $right
+    ) {}
+
+    public function isSatisfiedBy(mixed $candidate): bool
+    {
+        return $this->left->isSatisfiedBy($candidate)
+            && $this->right->isSatisfiedBy($candidate);
+    }
+}
+
+class OrSpecification extends AbstractSpecification
+{
+    public function __construct(
+        private readonly SpecificationInterface $left,
+        private readonly SpecificationInterface $right
+    ) {}
+
+    public function isSatisfiedBy(mixed $candidate): bool
+    {
+        return $this->left->isSatisfiedBy($candidate)
+            || $this->right->isSatisfiedBy($candidate);
+    }
+}
+
+class NotSpecification extends AbstractSpecification
+{
+    public function __construct(
+        private readonly SpecificationInterface $wrapped
+    ) {}
+
+    public function isSatisfiedBy(mixed $candidate): bool
+    {
+        return !$this->wrapped->isSatisfiedBy($candidate);
+    }
+}
+```
+
+**Concrete specifications:**
+
+```php
+// Kiểm tra order có thể ship
+class OrderCanShipSpecification extends AbstractSpecification
+{
+    public function isSatisfiedBy(mixed $order): bool
+    {
+        return $order->canShip()
+            && $order->getState() === \Magento\Sales\Model\Order::STATE_PROCESSING;
+    }
+}
+
+// Kiểm tra order có địa chỉ hợp lệ
+class OrderHasValidAddressSpecification extends AbstractSpecification
+{
+    public function isSatisfiedBy(mixed $order): bool
+    {
+        $address = $order->getShippingAddress();
+        return $address !== null
+            && !empty($address->getStreet())
+            && !empty($address->getCity());
+    }
+}
+
+// Compose specifications
+$canShipSpec = new OrderCanShipSpecification();
+$hasAddressSpec = new OrderHasValidAddressSpecification();
+$readyToShipSpec = $canShipSpec->and($hasAddressSpec);
+
+foreach ($orders as $order) {
+    if ($readyToShipSpec->isSatisfiedBy($order)) {
+        $this->shipOrder($order);
+    }
+}
+```
+
+---
+
+## 12. Collection vs Repository — khi nào dùng cái nào
+
+| Tiêu chí | Collection | Repository |
+|----------|-----------|-----------|
+| Abstraction | Thấp (gần DB) | Cao (domain layer) |
+| Instantiation | Factory (newable, stateful) | DI injection (stateless) |
+| Caching | Không | Có (ProductRepository cache) |
+| Flexibility | Cao (join, group, raw SQL) | Thấp hơn |
+| API exposure | Không | Có (service contract) |
+| Testability | Khó mock | Dễ mock |
+
+**Dùng Repository khi:**
+- Expose qua REST/GraphQL API
+- Cần caching layer
+- Cần decouple từ persistence layer
+- Viết unit test dễ hơn
+
+**Dùng Collection khi:**
+- Cần JOIN phức tạp
+- Cần GROUP BY, aggregate queries
+- Cần raw SQL performance
+- Xử lý batch lớn (lazy loading)
+- Admin grid DataProvider
+
+```php
+// Repository: inject, stateless, cacheable
+class ProductService
+{
+    public function __construct(
+        private readonly ProductRepositoryInterface $productRepository
+    ) {}
+
+    public function getProduct(int $id): ProductInterface
+    {
+        return $this->productRepository->getById($id); // cached
+    }
+}
+
+// Collection: factory, stateful, flexible
+class ProductBatchProcessor
+{
+    public function __construct(
+        private readonly CollectionFactory $collectionFactory
+    ) {}
+
+    public function processInBatches(int $batchSize = 500): void
+    {
+        $page = 1;
+        do {
+            $collection = $this->collectionFactory->create();
+            $collection
+                ->addAttributeToSelect(['sku', 'name', 'price'])
+                ->addFieldToFilter('status', 1)
+                ->setPageSize($batchSize)
+                ->setCurPage($page);
+
+            foreach ($collection as $product) {
+                $this->process($product);
+            }
+
+            $lastPage = $collection->getLastPageNumber();
+            $collection->clear(); // free memory
+            $page++;
+        } while ($page <= $lastPage);
+    }
+}
+```
+
+---
+
+## 13. Decorator pattern — wrapping service với extra behavior
+
+Decorator pattern trong Magento thường được implement qua `<preference>` hoặc plugin. Cách chuẩn nhất là dùng DI preference với wrapper class:
+
+```php
+<?php
+declare(strict_types=1);
+
+namespace Vendor\Module\Model;
+
+use Vendor\Module\Api\EntityRepositoryInterface;
+use Vendor\Module\Api\Data\EntityInterface;
+use Psr\Log\LoggerInterface;
+
+/**
+ * Decorator: thêm logging vào repository
+ */
+class LoggingEntityRepository implements EntityRepositoryInterface
+{
+    public function __construct(
+        private readonly EntityRepositoryInterface $innerRepository,
+        private readonly LoggerInterface $logger
+    ) {}
+
+    public function getById(int $id): EntityInterface
+    {
+        $this->logger->debug('EntityRepository::getById called', ['id' => $id]);
+        $result = $this->innerRepository->getById($id);
+        $this->logger->debug('EntityRepository::getById returned', ['entity_id' => $result->getId()]);
+        return $result;
+    }
+
+    public function save(EntityInterface $entity): EntityInterface
+    {
+        $this->logger->info('EntityRepository::save called', ['entity_id' => $entity->getId()]);
+        return $this->innerRepository->save($entity);
+    }
+
+    public function delete(EntityInterface $entity): bool
+    {
+        $this->logger->warning('EntityRepository::delete called', ['entity_id' => $entity->getId()]);
+        return $this->innerRepository->delete($entity);
+    }
+}
+```
+
+```xml
+<!-- etc/di.xml -->
+<!-- Wrap original repository với decorator -->
+<preference for="Vendor\Module\Api\EntityRepositoryInterface"
+            type="Vendor\Module\Model\LoggingEntityRepository"/>
+
+<!-- Inject original implementation vào decorator -->
+<type name="Vendor\Module\Model\LoggingEntityRepository">
+    <arguments>
+        <argument name="innerRepository" xsi:type="object">
+            Vendor\Module\Model\EntityRepository
+        </argument>
+    </arguments>
+</type>
+```
+
+**Lưu ý:** Ưu tiên dùng **plugin** thay vì decorator/preference trong Magento. Decorator phù hợp khi cần wrap toàn bộ interface implementation.
+
+---
+
+## 14. Converter / Mapper / Hydrator patterns
+
+### Converter pattern (toDataModel / toArray)
+
+```php
+<?php
+declare(strict_types=1);
+
+namespace Vendor\Module\Model;
+
+use Vendor\Module\Api\Data\EntityInterface;
+use Vendor\Module\Api\Data\EntityInterfaceFactory;
+
+class EntityConverter
+{
+    public function __construct(
+        private readonly EntityInterfaceFactory $entityFactory
+    ) {}
+
+    /**
+     * Convert DB row array → Data Model
+     */
+    public function toDataModel(array $data): EntityInterface
+    {
+        $entity = $this->entityFactory->create();
+        $entity->setId((int) ($data['entity_id'] ?? 0));
+        $entity->setName((string) ($data['name'] ?? ''));
+        $entity->setStatus((int) ($data['status'] ?? 0));
+        return $entity;
+    }
+
+    /**
+     * Convert Data Model → array for DB
+     */
+    public function toArray(EntityInterface $entity): array
+    {
+        return [
+            'entity_id' => $entity->getId(),
+            'name'      => $entity->getName(),
+            'status'    => $entity->getStatus(),
+        ];
+    }
+}
+```
+
+### Hydrator pattern (populate object từ array)
+
+```php
+<?php
+declare(strict_types=1);
+
+namespace Vendor\Module\Model;
+
+use Magento\Framework\EntityManager\HydratorInterface;
+
+class EntityHydrator implements HydratorInterface
+{
+    public function extract(object $entity): array
+    {
+        return [
+            'entity_id' => $entity->getId(),
+            'name'      => $entity->getName(),
+            'status'    => $entity->getStatus(),
+        ];
+    }
+
+    public function hydrate(object $entity, array $data): object
+    {
+        if (isset($data['entity_id'])) {
+            $entity->setId((int) $data['entity_id']);
+        }
+        if (isset($data['name'])) {
+            $entity->setName((string) $data['name']);
+        }
+        if (isset($data['status'])) {
+            $entity->setStatus((int) $data['status']);
+        }
+        return $entity;
+    }
+}
+```
+
+Magento có `Magento\Framework\EntityManager\HydratorPool` để quản lý hydrators theo entity type.
+
+---
+
 ## Liên kết
 
 - Plugin patterns: xem [plugin-patterns.md](./plugin-patterns.md)
 - DI & Generated code: xem [di-codegen.md](./di-codegen.md)
 - Service Contracts: xem [service-contracts.md](./service-contracts.md)
+- SearchCriteria & Data Layer: xem [search-criteria-data-layer.md](./search-criteria-data-layer.md)

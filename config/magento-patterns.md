@@ -54,6 +54,7 @@
 | GraphQL Development | Resolver, test, app server | [network/graphql/development.md](./references/network/graphql/development.md) |
 | GraphQL App Server | Stateless resolver | [network/graphql-app-server.md](./references/network/graphql-app-server.md) |
 | Message Queue (RabbitMQ) | Xử lý bất đồng bộ, tác vụ nặng | [network/message-queues.md](./references/network/message-queues.md) |
+| Async REST API & Bulk | Async single/bulk endpoint, UUID tracking, operation status | [network/async-rest-api.md](./references/network/async-rest-api.md) |
 | HTTP Client | Gọi external API | [network/http-client.md](./references/network/http-client.md) |
 | Adobe I/O Events | Emit events đến App Builder, event-driven integration | [network/adobe-io-events.md](./references/network/adobe-io-events.md) |
 | API Mesh | Compose nhiều API sources thành 1 GraphQL endpoint | [network/api-mesh.md](./references/network/api-mesh.md) |
@@ -67,8 +68,12 @@
 | Layout XML | Khai báo cấu trúc trang, blocks, containers | [frontend/layout-xml.md](./references/frontend/layout-xml.md) |
 | RequireJS & KnockoutJS | AMD module, mixins, map/paths/shim, KO observable, component lifecycle | [frontend/requirejs-knockoutjs.md](./references/frontend/requirejs-knockoutjs.md) |
 | UI Components (Admin Grid/Form) | Admin listing, form CRUD | [frontend/ui-components.md](./references/frontend/ui-components.md) |
-| Admin UI Grid | Admin grid với filter/sort/action | [frontend/admin-ui-grid.md](./references/frontend/admin-ui-grid.md) |
+| Admin UI Grid | Admin grid với filter/sort/action, mass actions, inline edit, bookmarks | [frontend/admin-ui-grid.md](./references/frontend/admin-ui-grid.md) |
+| Admin Form | Admin form với fieldset, dynamic rows, field dependencies | [frontend/admin-form.md](./references/frontend/admin-form.md) |
 | Admin Form Save and Continue | Admin form giữ lại trang edit sau save | [frontend/admin-save-and-continue.md](./references/frontend/admin-save-and-continue.md) |
+| Checkout Steps | Custom checkout step, payment renderer, shipping renderer | [frontend/checkout-steps.md](./references/frontend/checkout-steps.md) |
+| LESS/CSS | Theme inheritance, _module.less, _extend.less, variables, mixins | [frontend/less-css.md](./references/frontend/less-css.md) |
+| Pager/Toolbar | Product list toolbar, sort, limit, custom sort option | [frontend/pager-toolbar.md](./references/frontend/pager-toolbar.md) |
 | Hyvä Theme | Alpine.js, Magewire, Tailwind CSS frontend | [frontend/hyva-theme.md](./references/frontend/hyva-theme.md) |
 | Widget | Reusable CMS component cấu hình từ Admin | [frontend/widget.md](./references/frontend/widget.md) |
 
@@ -87,12 +92,16 @@
 | Shipping Carrier | Custom shipping method | [infrastructure/shipping-carrier.md](./references/infrastructure/shipping-carrier.md) |
 | Import/Export | Custom import entity CSV | [infrastructure/import-export.md](./references/infrastructure/import-export.md) |
 | Redis | Session storage, cache backend, Sentinel | [infrastructure/redis.md](./references/infrastructure/redis.md) |
+| RabbitMQ | Message queue, exchange, DLQ, retry, consumer | [infrastructure/rabbitmq.md](./references/infrastructure/rabbitmq.md) |
 | CLI Command | Console command `bin/magento` | [ops/maintenance-cli.md](./references/ops/maintenance-cli.md) |
 | Multi-Store | Scope, store_view, config inheritance | [ops/multi-store.md](./references/ops/multi-store.md) |
 | Config Paths | Đọc/ghi system config | [ops/config-paths.md](./references/ops/config-paths.md) |
 | Configuration Management | Scope, deploy config | [ops/configuration-management.md](./references/ops/configuration-management.md) |
 | Deployment Pipeline | Deploy flow, setup commands | [ops/deployment-pipeline.md](./references/ops/deployment-pipeline.md) |
-| Unit Testing | PHPUnit, mock, test structure | [ops/unit-testing.md](./references/ops/unit-testing.md) |
+| Unit Testing | PHPUnit, mock, test structure, mock repository/service | [ops/unit-testing.md](./references/ops/unit-testing.md) |
+| Static Analysis | PHPCS, PHPStan, PHP CS Fixer, GrumPHP | [ops/static-analysis.md](./references/ops/static-analysis.md) |
+| Tooling | Pestle, n98-magerun2, PHPStorm plugin, Makefile | [ops/tooling.md](./references/ops/tooling.md) |
+| Docker/DDEV | DDEV setup, markshust/docker-magento, CI/CD GitHub Actions | [ops/docker-ddev.md](./references/ops/docker-ddev.md) |
 | Upgrade & Compatibility | UCT, cweagans patches, Composer versioning | [ops/upgrade.md](./references/ops/upgrade.md) |
 
 ### Security & Payments
@@ -101,6 +110,7 @@
 |---|---|---|
 | Security Best Practices | Input validation, XSS, CSRF, SQL injection | [security/security-best-practices.md](./references/security/security-best-practices.md) |
 | ACL | Phân quyền Admin, API, block | [security/acl.md](./references/security/acl.md) |
+| Admin Security | Brute force, session lifetime, IP whitelist, API token lifecycle | [security/admin-security.md](./references/security/admin-security.md) |
 | Payment Gateway | Tích hợp payment method (online) | [security/payment-gateway.md](./references/security/payment-gateway.md) |
 | Vault & Token | Lưu token thanh toán | [security/payment-vault.md](./references/security/payment-vault.md) |
 | CSP | Content Security Policy, whitelist, nonce | [security/csp.md](./references/security/csp.md) |
@@ -113,6 +123,7 @@
 |---|---|---|
 | Inventory MSI | Multi-source inventory, reservation | [inventory/inventory-msi.md](./references/inventory/inventory-msi.md) |
 | Order Lifecycle | State/status flow, invoice, shipment, creditmemo | [business/order-lifecycle.md](./references/business/order-lifecycle.md) |
+| Order Management Advanced | Hold/unhold, cancel, reorder, partial invoice/ship, custom status | [business/order-management-advanced.md](./references/business/order-management-advanced.md) |
 | Customer Management | CustomerRepository, address, group, session | [business/customer-management.md](./references/business/customer-management.md) |
 | Catalog Product Types | Product types, price hierarchy, EAV attributes | [business/catalog-product-types.md](./references/business/catalog-product-types.md) |
 | Custom Product Type | Tạo product type mới với price model riêng | [business/custom-product-type.md](./references/business/custom-product-type.md) |

@@ -397,6 +397,94 @@ do {
 
 ---
 
+## 11. Xdebug — step debug với PhpStorm
+
+### Cài đặt Xdebug
+
+```bash
+# Kiểm tra Xdebug đã cài chưa
+php -v | grep Xdebug
+
+# Cài qua PECL
+pecl install xdebug
+
+# php.ini config (Xdebug 3.x)
+[xdebug]
+xdebug.mode=debug
+xdebug.start_with_request=yes
+xdebug.client_host=host.docker.internal  # Docker
+xdebug.client_port=9003
+xdebug.idekey=PHPSTORM
+```
+
+### DDEV setup
+
+```bash
+# Enable Xdebug trong DDEV
+ddev xdebug on
+
+# Disable (tắt khi không debug để tránh chậm)
+ddev xdebug off
+
+# Kiểm tra status
+ddev xdebug status
+```
+
+### Docker (markshust/docker-magento)
+
+```bash
+# Enable Xdebug
+bin/xdebug enable
+
+# Disable
+bin/xdebug disable
+```
+
+### PhpStorm Configuration
+
+1. `Preferences > PHP > Servers`
+2. Thêm server mới:
+   - Name: `magento_cloud_docker` (phải khớp với `PHP_IDE_CONFIG`)
+   - Host: `localhost`
+   - Port: `80`
+   - Debugger: `Xdebug`
+3. Bật **Use path mappings**:
+   - Local path: `/path/to/project`
+   - Remote path: `/app` (hoặc `/var/www/html`)
+4. `Preferences > PHP > Debug > Xdebug > Debug Port`: `9003`
+
+### Debug Web Request
+
+1. Click **Start Listening for PHP Debug Connections** trong PhpStorm
+2. Cài [Xdebug Helper](https://chrome.google.com/webstore/detail/xdebug-helper) extension cho Chrome
+3. Bật debug trong extension (chọn IDE Key: PhpStorm)
+4. Đặt breakpoint trong code
+5. Reload trang → PhpStorm sẽ dừng tại breakpoint
+
+### Debug CLI Command
+
+```bash
+# Chạy CLI với Xdebug
+XDEBUG_SESSION=PHPSTORM php bin/magento cache:clean
+
+# Hoặc với DDEV
+ddev xdebug on
+ddev exec php bin/magento cache:clean
+```
+
+### Xdebug Profiling (không phải step debug)
+
+```bash
+# php.ini
+xdebug.mode=profile
+xdebug.output_dir=/tmp/xdebug
+xdebug.profiler_output_name=cachegrind.out.%p
+
+# Chạy và phân tích với KCachegrind/QCacheGrind
+```
+
+---
+
 ## Liên kết
 
 - Logging: xem [../infrastructure/logging.md](../infrastructure/logging.md)
