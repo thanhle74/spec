@@ -23,9 +23,74 @@ Nguồn: [GraphQL resolvers](https://developer.adobe.com/commerce/webapi/graphql
 - Resolver xử lý từng field; context dùng chung: **`Magento\Framework\GraphQl\Query\Resolver\ContextInterface`**.
 - Interface phổ biến:
   - **`ResolverInterface`** — `resolve(Field $field, $context, ResolveInfo $info, array $value = null, array $args = null)`.
-  - **`BatchResolverInterface`** — gom nhiều nhánh cùng kiểu (vd. `related_products`) để tránh N+1.
+  - **`BatchResolverInterface`** — gom nhiều nhánh cùng kiểu (vd. `related_products`) để tránh N+1. Trả về `BatchResponse`.
   - **`BatchServiceContractResolverInterface`** — batch nhưng ủy quyền xử lý cho service contract.
 - Mutation thường implement `ResolverInterface` (xem ví dụ đầy đủ trên Adobe).
+
+### Resolver class template
+
+```php
+<?php
+declare(strict_types=1);
+
+namespace Vendor\Module\Model\Resolver;
+
+use Magento\Framework\GraphQl\Config\Element\Field;
+use Magento\Framework\GraphQl\Query\ResolverInterface;
+use Magento\Framework\GraphQl\Schema\Type\ResolveInfo;
+use Magento\Framework\GraphQl\Exception\GraphQlInputException;
+use Magento\Framework\GraphQl\Exception\GraphQlNoSuchEntityException;
+
+class MyResolver implements ResolverInterface
+{
+    public function resolve(
+        Field $field,
+        $context,
+        ResolveInfo $info,
+        array $value = null,
+        array $args = null
+    ) {
+        // Kiểm tra auth nếu cần
+        if (false === $context->getExtensionAttributes()->getIsCustomer()) {
+            throw new GraphQlAuthorizationException(__('Customer not authenticated.'));
+        }
+
+        // Validate input
+        if (empty($args['id'])) {
+            throw new GraphQlInputException(__('Required parameter "id" is missing.'));
+        }
+
+        // Trả về array — Magento map sang GraphQL type
+        return [
+            'id' => $args['id'],
+            'name' => 'Example',
+        ];
+    }
+}
+```
+
+### Context — thông tin request
+
+```php
+// Lấy customer ID
+$customerId = $context->getUserId();
+
+// Kiểm tra customer đã login
+$isCustomer = $context->getExtensionAttributes()->getIsCustomer();
+
+// Lấy store
+$store = $context->getExtensionAttributes()->getStore();
+```
+
+### Exception types cho GraphQL
+
+| Class | HTTP code | Dùng khi |
+|-------|-----------|---------|
+| `GraphQlInputException` | 400 | Input không hợp lệ |
+| `GraphQlAuthorizationException` | 401 | Không có quyền |
+| `GraphQlAuthenticationException` | 401 | Chưa đăng nhập |
+| `GraphQlNoSuchEntityException` | 404 | Entity không tồn tại |
+| `GraphQlAlreadyExistsException` | 409 | Entity đã tồn tại |
 
 ---
 

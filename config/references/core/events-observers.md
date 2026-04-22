@@ -128,6 +128,29 @@ Dưới đây là một số sự kiện thường dùng nhất. Xem danh sách 
 
 ---
 
+## 6. Disable Observer
+
+```xml
+<!-- Tắt observer của module khác -->
+<event name="my_module_event_before">
+    <observer name="myObserverName" disabled="true" />
+</event>
+```
+
+---
+
+## 7. Shared instance (lifecycle)
+
+Observer mặc định là **shared** (`shared="true"`) — cùng 1 instance dùng lại cho mọi lần dispatch. Nếu cần instance mới mỗi lần, set `shared="false"` trong `events.xml`.
+
+---
+
+## 8. Cyclical event loop — cảnh báo
+
+Tránh Observer gọi method dispatch event mà chính Observer đó đang lắng nghe → vòng lặp vô hạn. Kiểm tra kỹ trước khi dispatch event trong Observer.
+
+---
+
 ## Liên kết
 
 - Plugin: xem [plugins.md](./plugins.md)

@@ -83,7 +83,8 @@
 
 | Pattern | Dùng khi | Reference |
 |---|---|---|
-| Security Best Practices | Input validation, XSS, CSRF | [security/security-best-practices.md](./references/security/security-best-practices.md) |
+| Security Best Practices | Input validation, XSS, CSRF, SQL injection | [security/security-best-practices.md](./references/security/security-best-practices.md) |
+| ACL | Phân quyền Admin, API, block | [security/acl.md](./references/security/acl.md) |
 | Payment Gateway | Tích hợp payment method | [security/payment-gateway.md](./references/security/payment-gateway.md) |
 | Vault & Token | Lưu token thanh toán | [security/payment-vault.md](./references/security/payment-vault.md) |
 

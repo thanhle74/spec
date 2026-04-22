@@ -116,8 +116,46 @@ Ngăn chặn thao túng bộ nhớ đệm qua Header giả mạo.
 
 ---
 
+## 9. SQL Injection Prevention
+
+Luôn dùng parameterized queries, không nối chuỗi SQL trực tiếp.
+
+```php
+// ✅ Đúng — dùng bind param
+$connection = $this->resourceConnection->getConnection();
+$select = $connection->select()
+    ->from('catalog_product_entity')
+    ->where('sku = ?', $sku);  // ? được escape tự động
+
+// ✅ Đúng — dùng quoteInto
+$where = $connection->quoteInto('entity_id = ?', $entityId);
+
+// ❌ Sai — nối chuỗi trực tiếp
+$select = "SELECT * FROM catalog_product_entity WHERE sku = '$sku'";
+```
+
+---
+
+## 10. Input Validation
+
+```php
+// Validate trong Service/Repository
+if (empty($data['email']) || !filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
+    throw new \Magento\Framework\Exception\InputException(__('Invalid email address.'));
+}
+
+// Validate trong Controller
+$name = $this->getRequest()->getParam('name');
+if (!preg_match('/^[a-zA-Z0-9\s]+$/', $name)) {
+    throw new \Magento\Framework\Exception\InputException(__('Invalid name format.'));
+}
+```
+
+---
+
 ## Liên kết
 
+- ACL: xem [acl.md](./acl.md)
 - Configuration Management: xem [configuration-management.md](./configuration-management.md)
 - Web API Auth: xem [web-api.md](./web-api.md)
 - Quy tắc chung: xem [../constitution.md](../constitution.md)

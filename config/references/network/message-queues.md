@@ -196,6 +196,21 @@ Khi chạy các tác vụ liên quan đến đa website/đa cửa hàng, việc 
 
 ---
 
+## 10. Tóm tắt: MySQL adapter vs AMQP
+
+| | MySQL adapter | AMQP (RabbitMQ) |
+|--|--------------|----------------|
+| Cài đặt | Không cần thêm | Cần RabbitMQ server |
+| Scalability | Thấp | Cao |
+| Reliability | Cơ bản | Cao (undelivered message store) |
+| Dùng cho | Dev/staging, tải thấp | Production |
+| Tables | `queue`, `queue_message`, `queue_message_status` | N/A |
+| Consumer trigger | Cron job | Persistent process |
+
+**Khuyến nghị:** Không dùng MySQL adapter cho Production với tải cao.
+
+---
+
 ## Liên kết
 
 - DI & Codegen: xem [di-codegen.md](./di-codegen.md)
