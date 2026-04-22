@@ -62,6 +62,41 @@
 | `creditmemo` | Phiếu hoàn tiền |
 | `address` | Địa chỉ giao hàng/thanh toán — tồn tại ở cả quote và order |
 
+### Order ID — dễ nhầm nhất
+
+| Thuật ngữ | Định nghĩa | Dùng với |
+|---|---|---|
+| `entity_id` | ID nội bộ DB, auto-increment (`sales_order.entity_id`) | `OrderRepository::get($entityId)` |
+| `increment_id` | Số đơn hàng hiển thị cho khách (`#000000123`, `sales_order.increment_id`) | `SearchCriteriaBuilder` + `getList()` |
+
+> **Quy tắc bắt buộc:** `OrderRepository::get()` chỉ nhận `entity_id`, KHÔNG nhận `increment_id`.
+> Để lấy order theo `increment_id`, phải dùng `SearchCriteriaBuilder`:
+
+```php
+// ✅ Đúng — lấy order theo increment_id
+$searchCriteria = $this->searchCriteriaBuilder
+    ->addFilter('increment_id', $incrementId)
+    ->create();
+$orders = $this->orderRepository->getList($searchCriteria)->getItems();
+$order = reset($orders); // lấy phần tử đầu tiên
+
+// ❌ Sai — loadByIncrementId() là legacy, không dùng
+$order = $this->orderFactory->create()->loadByIncrementId($incrementId);
+
+// ❌ Sai — get() nhận entity_id, không phải increment_id
+$order = $this->orderRepository->get($incrementId);
+```
+
+### Order status vs Order state
+
+| Thuật ngữ | Định nghĩa |
+|---|---|
+| `state` | Trạng thái kỹ thuật nội bộ của order (ví dụ: `new`, `processing`, `complete`, `closed`, `canceled`) |
+| `status` | Nhãn hiển thị map với `state` — có thể tùy chỉnh trong Admin (ví dụ: `pending`, `pending_payment`) |
+
+> `state` là cố định do Magento định nghĩa. `status` là configurable, nhiều status có thể map vào 1 state.
+> Khi filter order theo trạng thái trong code: dùng `state` để chắc chắn, không dùng `status` trừ khi có lý do rõ ràng.
+
 ---
 
 ## Pricing
