@@ -103,6 +103,7 @@
 | Tooling | Pestle, n98-magerun2, PHPStorm plugin, Makefile | [ops/tooling.md](./references/ops/tooling.md) |
 | Docker/DDEV | DDEV setup, markshust/docker-magento, CI/CD GitHub Actions | [ops/docker-ddev.md](./references/ops/docker-ddev.md) |
 | Upgrade & Compatibility | UCT, cweagans patches, Composer versioning | [ops/upgrade.md](./references/ops/upgrade.md) |
+| Staging & Preview (Commerce) | Campaign timeline, scheduled updates, preview flow (Commerce only) | [ops/staging-preview-commerce.md](./references/ops/staging-preview-commerce.md) |
 
 ### Security & Payments
 

@@ -26,6 +26,7 @@ public function __construct(
 - Trả `false` khi carrier không áp dụng (inactive, không có item hợp lệ, v.v.)
 - Chỉ append method khi đủ điều kiện nghiệp vụ
 - Nếu method chỉ áp dụng subset sản phẩm: phải có guard rõ ràng, không ảnh hưởng carrier khác
+- Không gọi `checkoutSession->getQuote()` bên trong `collectRates()` để tránh vòng lặp recollect quote; ưu tiên dùng dữ liệu từ `RateRequest`
 
 ```php
 public function collectRates(RateRequest $request): bool|\Magento\Shipping\Model\Rate\Result
@@ -54,6 +55,46 @@ public function collectRates(RateRequest $request): bool|\Magento\Shipping\Model
     return $result;
 }
 ```
+
+## RateRequest & RateResult (flow chuẩn)
+
+- `RateRequest` là input chuẩn cho carrier tính phí (`items`, `dest`, `package weight/value/qty`).
+- `RateResult` là output chứa danh sách method hợp lệ (`Method`) hoặc lỗi (`Error`).
+- Nếu không áp dụng, return `false`; nếu có áp dụng thì return `RateResult`.
+
+Nguồn gốc:
+- https://developer.adobe.com/commerce/php/module-reference/module-shipping/
+- https://magento.stackexchange.com/questions/340048/how-to-properly-get-current-quote-in-carrier-collect-rates-function
+
+## Free Shipping integration
+
+- Free shipping có thể bật ở Delivery Methods và kết hợp Cart Price Rule.
+- Trong custom carrier/table rate, cần xử lý item `free_shipping` để tránh tính phí sai khi rule promotion đang active.
+- Logic chuẩn là tách `freeQty`/`freeWeight` và điều chỉnh package trước khi tra bảng phí.
+
+Nguồn gốc:
+- https://magefan.com/blog/configure-free-shipping-method-in-magento-2
+- https://raw.githubusercontent.com/magento/magento2/2.4-develop/app/code/Magento/OfflineShipping/Model/Carrier/Tablerate.php
+
+## Table Rates essentials
+
+- Bản core dùng `condition_name` với 3 mode:
+  - `package_weight` (Weight vs Destination)
+  - `package_value_with_discount` (Price vs Destination)
+  - `package_qty` (#Items vs Destination)
+- Với full-cart free shipping, core vẫn có thể append method giá `0` nếu rate table match.
+
+Nguồn gốc:
+- https://raw.githubusercontent.com/magento/magento2/2.4-develop/app/code/Magento/OfflineShipping/Model/Carrier/Tablerate.php
+
+## Anti-pattern và refactor theo constitution
+
+- Một số bài community minh họa plugin lọc shipping trả về sai kiểu hoặc mutate result theo cách dễ gây side-effect.
+- Khi viết plugin `afterCollectRates`, luôn trả về đúng kiểu result object; không trả `subject`.
+- Không dùng `print_r/var_dump`; log qua `Psr\Log\LoggerInterface`.
+
+Nguồn gốc:
+- https://webkul.com/blog/restrict-custom-shipping-methods-magento2/ — đã refactor theo constitution
 
 ---
 

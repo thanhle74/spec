@@ -140,13 +140,15 @@
 | Admin security: brute force protection, session lifetime, IP whitelist | 2026-04-23 | Tạo mới `config/references/security/admin-security.md` |
 | API token: integration token, customer token, admin token lifecycle | 2026-04-23 | Tích hợp vào `config/references/security/admin-security.md` (§4-6) |
 | Static analysis: PHPStan, PHPMD, Magento coding standard (PHPCS) | 2026-04-23 | Tạo mới `config/references/ops/static-analysis.md` |
+| Staging & Preview (Commerce): version, update, campaign, timeline | 2026-04-23 | Tạo mới `config/references/ops/staging-preview-commerce.md`; cập nhật `config/magento-patterns.md` |
+| Shipping: rate request, rate result, free shipping, table rates | 2026-04-23 | Cập nhật `config/references/infrastructure/shipping-carrier.md` (thêm flow RateRequest/RateResult, free shipping, table rates, anti-pattern) |
 
 ---
 
 ## Chưa research
 
 ### Nâng cao / chuyên sâu (Adobe Commerce only)
-- Staging & Preview (Commerce): version, update, campaign, timeline
+- ~~Staging & Preview (Commerce): version, update, campaign, timeline~~ ✅ Done
 
 ### Core / Architecture
 - ~~Around plugin: khi nào dùng, performance cost, callable pattern đúng~~ ✅ Done
@@ -174,7 +176,7 @@
 - ~~Catalog price: price waterfall, custom price modifier, group price~~ ✅ Done
 - ~~Cart rules: condition combine, action types, coupon generation~~ ✅ Done
 - ~~Tax: tax class, tax rule, FPT, display settings, store config~~ ✅ Done
-- Shipping: rate request, rate result, free shipping, table rates
+- ~~Shipping: rate request, rate result, free shipping, table rates~~ ✅ Done
 - ~~Order management: hold/unhold, cancel, reorder, partial invoice/ship~~ ✅ Done
 - Return/RMA: return request, item condition, resolution (Commerce)
 - Gift card: account, balance, usage (Commerce)
