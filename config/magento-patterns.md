@@ -113,6 +113,7 @@
 | ACL | Phân quyền Admin, API, block | [security/acl.md](./references/security/acl.md) |
 | Admin Security | Brute force, session lifetime, IP whitelist, API token lifecycle | [security/admin-security.md](./references/security/admin-security.md) |
 | Payment Gateway | Tích hợp payment method (online) | [security/payment-gateway.md](./references/security/payment-gateway.md) |
+| Paysquad (Group Payment) | Tích hợp Paysquad — group-payment platform, async webhook-based | [network/paysquad.md](./references/network/paysquad.md) |
 | Vault & Token | Lưu token thanh toán | [security/payment-vault.md](./references/security/payment-vault.md) |
 | CSP | Content Security Policy, whitelist, nonce | [security/csp.md](./references/security/csp.md) |
 | Two-Factor Authentication | 2FA provider, bypass dev, REST API token | [security/two-factor-auth.md](./references/security/two-factor-auth.md) |
