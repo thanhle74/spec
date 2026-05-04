@@ -141,7 +141,8 @@ Run these tools for automated checks:
 - **Service Contracts**: Ensure proper API interface implementation
 - **Plugin Usage**: Evaluate before/after/around plugin implementations
 - **Event Observers**: Review event dispatching patterns
-- **Database Schema**: Validate db_schema.xml and upgrade scripts
+- **Database Schema**: `etc/db_schema.xml` + `etc/db_schema_whitelist.json` (reject if under `Setup/`); validate declarative schema and patches — no legacy InstallSchema for new tables
+- **Serialization**: Flag `json_encode`/`json_decode` and PHP `serialize`/`unserialize` for business/JSON payloads; require `Magento\Framework\Serialize\Serializer\Json` (or `SerializerInterface`) via DI
 
 ## Reporting Standards
 

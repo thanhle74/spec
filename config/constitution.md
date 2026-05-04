@@ -1,6 +1,6 @@
 # Constitution - Quy tắc phát triển chung
 
-> version: 1.1.4 | last_updated: 2026-04-16
+> version: 1.1.5 | last_updated: 2026-05-04
 
 ## Thông tin project
 
@@ -56,7 +56,8 @@
 - KHÔNG dùng `<preference>` khi có thể dùng plugin
 - KHÔNG để code chết, code comment out
 - KHÔNG dùng `exit`, `die`, `var_dump`, `print_r` trong code chính thức
-- KHÔNG tạo bảng DB mà không có `db_schema.xml` + `db_schema_whitelist.json`
+- KHÔNG tạo bảng DB mà không có `etc/db_schema.xml` + `etc/db_schema_whitelist.json` (hai file này **phải** nằm dưới `etc/`, không đặt trong `Setup/`)
+- KHÔNG dùng `json_encode` / `json_decode` / `serialize()` / `unserialize()` PHP trực tiếp cho JSON hoặc chuỗi hóa dữ liệu nghiệp vụ — dùng `Magento\Framework\Serialize\Serializer\Json` (inject qua DI)
 
 ---
 
@@ -100,7 +101,7 @@ Chỉ tính năng nào cần, mới thêm folder tương ứng. Không tạo fol
 
 ## 6. Database
 
-- Dùng Declarative Schema (`db_schema.xml`), KHÔNG dùng InstallSchema/UpgradeSchema
+- Dùng Declarative Schema: file **`etc/db_schema.xml`** (và **`etc/db_schema_whitelist.json`** sau khi đổi schema), KHÔNG dùng InstallSchema/UpgradeSchema; KHÔNG đặt `db_schema.xml` trong `Setup/` dù URN XSD có chứa `Setup` trong tên
 - Đặt tên bảng: `<vendor>_<module>_<entity>` (ví dụ: `<vendor>_employee_record`)
 - Tạo Data Patch cho dữ liệu mặc định, KHÔNG dùng InstallData/UpgradeData
 - Index cho các column thường query

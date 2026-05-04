@@ -24,8 +24,8 @@
 
 ## 3. Database
 
-- [ ] `db_schema.xml` (không dùng InstallSchema)
-- [ ] `db_schema_whitelist.json`
+- [ ] `etc/db_schema.xml` (không dùng InstallSchema; **không** đặt trong `Setup/`)
+- [ ] `etc/db_schema_whitelist.json`
 - [ ] Tên bảng: `<vendor>_<module>_<entity>`
 - [ ] Data Patch cho seed data
 

@@ -157,6 +157,8 @@ class EntityRepository implements EntityRepositoryInterface
 
 ## Database Schema (db_schema.xml)
 
+**Path:** `etc/db_schema.xml` (và `etc/db_schema_whitelist.json`). Never place these files under `Setup/` — the XSD URN contains `Setup` in core paths only.
+
 ```xml
 <?xml version="1.0"?>
 <schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 

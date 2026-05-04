@@ -92,6 +92,7 @@ Expert specialist in creating well-architected, maintainable, and extensible Mag
 - Use proper scope (global, frontend, adminhtml, webapi_rest, webapi_soap)
 
 #### db_schema.xml
+- File location: **`etc/db_schema.xml`** (whitelist: **`etc/db_schema_whitelist.json`**) — never under `Setup/`
 - Define database tables, columns, indexes
 - Use proper data types and constraints
 - Follow Magento naming conventions

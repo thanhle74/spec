@@ -7,12 +7,12 @@
 | `Block/` | View blocks |
 | `Controller/` | Controllers (`Adminhtml/` for backend) |
 | `Cron/` | Cron jobs |
-| `etc/` | Configuration XML files |
+| `etc/` | Configuration XML files, declarative DB schema (`db_schema.xml`, `db_schema_whitelist.json`) |
 | `Helper/` | Helper classes |
 | `Model/` | Models, ResourceModels, Repositories |
 | `Observer/` | Event observers |
 | `Plugin/` | Interceptor plugins |
-| `Setup/` | Install/Upgrade scripts (legacy) |
+| `Setup/` | Patch / recurring / legacy setup PHP classes — **not** where `db_schema.xml` lives |
 | `Ui/` | UI components (DataProvider, etc.) |
 | `ViewModel/` | View models |
 | `view/frontend/` | Frontend templates, layout, web assets |
@@ -36,3 +36,5 @@
 | `etc/acl.xml` | ACL resources |
 | `etc/widget.xml` | Widget definitions |
 | `etc/email_templates.xml` | Email template definitions |
+| `etc/db_schema.xml` | Declarative database schema (tables, columns, indexes) |
+| `etc/db_schema_whitelist.json` | Whitelist for destructive declarative schema operations |

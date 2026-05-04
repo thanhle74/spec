@@ -311,6 +311,8 @@ Build custom Magento 2 modules using the module architecture, dependency injecti
 
 5. **Create database tables with declarative schema**
 
+   Save the file as **`etc/db_schema.xml`** under the module root only. Do **not** put `db_schema.xml` under `Setup/` (the URN references `Setup` inside Magento core, not your module folder).
+
    ```xml
    <!-- etc/db_schema.xml -->
    <?xml version="1.0"?>

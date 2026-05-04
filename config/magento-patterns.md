@@ -1,6 +1,6 @@
 # Magento Patterns - Index
 
-> version: 1.2.0 | last_updated: 2026-04-17
+> version: 1.2.1 | last_updated: 2026-05-04
 >
 > File này là **index** — mỗi pattern chỉ ghi tên, khi nào dùng, và link reference chi tiết.
 > Khi implement pattern nào: **bắt buộc đọc reference tương ứng trước khi code**.
@@ -17,6 +17,8 @@
 - Logger: type-hint `Psr\Log\LoggerInterface` (không dùng `Magento\Psr\Log\LoggerInterface`)
 - Ưu tiên plugin thay vì `<preference>`
 - `before` plugin return array: không `unset()` tham số sẽ được return
+- `db_schema.xml` / `db_schema_whitelist.json` chỉ trong `etc/`, không trong `Setup/`
+- JSON / chuỗi hóa nghiệp vụ: inject `Magento\Framework\Serialize\Serializer\Json` (DI), không `json_encode`/`json_decode`/`serialize`/`unserialize` PHP trực tiếp
 
 ---
 

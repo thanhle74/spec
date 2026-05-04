@@ -226,7 +226,8 @@ Thay vào đó:
 - Không sửa file core Magento
 - Không dùng `ObjectManager::getInstance()` trong code tùy chỉnh
 - Không hardcode store ID, website ID, customer group ID
-- Luôn dùng `db_schema.xml` (declarative schema), không dùng `InstallSchema`
+- Declarative schema: `etc/db_schema.xml` + `etc/db_schema_whitelist.json` — **bắt buộc trong `etc/`**; không dùng `InstallSchema`/`UpgradeSchema`; không đặt schema trong `Setup/` (folder `Setup/` là patch/recurring/legacy, không phải chỗ chứa `db_schema.xml`). URN XSD có chữ `Setup` chỉ là đường dẫn nội bộ trong core Magento, không phải vị trí file trong module.
+- Không dùng `json_encode` / `json_decode` / `serialize()` / `unserialize()` native PHP cho dữ liệu JSON hoặc payload nghiệp vụ trong module — inject `Magento\Framework\Serialize\Serializer\Json` (hoặc `SerializerInterface` khi abstraction phù hợp) qua constructor, gọi `serialize()` / `unserialize()`.
 - Luôn inject dependency qua constructor, không `new ClassName()` trong code nghiệp vụ.
 - Cấm `new` trong `Model/Service/Plugin/Observer/Controller/Resolver/ViewModel`; nếu cần runtime instantiation thì tạo qua factory/wrapper được inject DI.
 - Với thư viện bên thứ ba (vd reCAPTCHA), không instantiate trực tiếp trong service; bắt buộc đi qua factory/wrapper của module.

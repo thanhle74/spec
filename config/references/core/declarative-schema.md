@@ -17,6 +17,8 @@ Thứ tự thực thi: Declarative Schema chạy trước Data Patch và Schema 
 
 File đặt tại: `<Vendor>/<Module>/etc/db_schema.xml`
 
+**Quan trọng (tránh bug phổ biến):** `db_schema.xml` và `db_schema_whitelist.json` **luôn** nằm trong **`etc/`** của module. **Không** tạo chúng trong `Setup/`. Thuộc tính `xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd"` chỉ trỏ tới XSD trong core Magento (đường dẫn URN), **không** có nghĩa file khai báo schema phải đặt dưới thư mục `Setup/` của module.
+
 ### Node gốc
 
 ```xml

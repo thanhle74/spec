@@ -52,14 +52,19 @@ $iv = $this->mathRandom->getRandomString(16); // Tạo IV cho mã hóa
 
 ---
 
-## 5. Serializer (JSON/Serialize)
+## 5. Serializer (JSON / chuỗi hóa)
 
-Luôn dùng interface `Magento\Framework\Serialize\SerializerInterface` thay vì hàm `json_encode` gốc. Điều này giúp dễ dàng chuyển đổi parser nếu cần.
+**Quy tắc:** Trong code module (Model/Service/Plugin/Observer/Controller/…), **không** dùng `json_encode` / `json_decode` hoặc `serialize()` / `unserialize()` PHP trực tiếp cho dữ liệu JSON hoặc payload nghiệp vụ — không đồng bộ với chuẩn Magento, khó debug, dễ lệch format / rủi ro bảo mật.
+
+**Chuẩn:** inject `Magento\Framework\Serialize\Serializer\Json` qua constructor (DI), gọi `serialize()` / `unserialize()` trên instance đó. Khi cần abstraction (test double / nhiều backend), có thể type-hint `Magento\Framework\Serialize\SerializerInterface` nếu module đã bind đúng implementation trong `di.xml`.
 
 ```php
-$json = $this->serializer->serialize($data);
-$array = $this->serializer->unserialize($json);
+// Constructor: Serializer\Json $jsonSerializer
+$json = $this->jsonSerializer->serialize($data);
+$array = $this->jsonSerializer->unserialize($json);
 ```
+
+**Lợi ích:** đồng bộ với core Magento, exception rõ ràng khi lỗi, xử lý thống nhất.
 
 ---
 
