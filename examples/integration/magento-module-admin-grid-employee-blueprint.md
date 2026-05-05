@@ -115,3 +115,84 @@ Yêu cầu output:
   - model/resource model
   - ui listing data source (`indexField`, `primaryFieldName`, `requestFieldName`)
 - Giữ naming nhất quán để giảm lỗi mapping ở UI component.
+
+---
+
+## 6) Gotchas thường gặp (đúc kết từ thực tế)
+
+### 6.1 `<buttons>` trong listing UI component — KHÔNG dùng comment rỗng
+
+**Lỗi:** `TypeError: addButtons(): Argument #1 ($buttons) must be of type array, string given`
+
+**Nguyên nhân:** Viết `<buttons><!-- comment --></buttons>` khiến Magento parse thành string thay vì array.
+
+**Fix:** Nếu grid read-only không cần button, **xóa hẳn** thẻ `<buttons>` khỏi `<settings>`, đừng để trống hay comment bên trong.
+
+```xml
+<!-- SAI -->
+<settings>
+    <buttons>
+        <!-- read-only: no Add button -->
+    </buttons>
+</settings>
+
+<!-- ĐÚNG — xóa hẳn thẻ buttons -->
+<settings>
+    <spinner>my_listing_columns</spinner>
+</settings>
+```
+
+---
+
+### 6.2 `DataProvider::getData()` — KHÔNG dùng `toArray()`
+
+**Lỗi:** `Uncaught TypeError: Cannot create property '_rowIndex' on number '0'` (JS, provider.js)
+
+**Nguyên nhân:** `$collection->toArray()` trả về array với numeric keys và flat values — Magento UI grid cần mỗi item là associative array (object).
+
+**Fix:** Dùng `$item->getData()` trong vòng lặp:
+
+```php
+// SAI
+'items' => array_values($this->getCollection()->toArray()),
+
+// ĐÚNG
+$items = [];
+foreach ($this->getCollection() as $item) {
+    $items[] = $item->getData();
+}
+return [
+    'totalRecords' => $this->getCollection()->getSize(),
+    'items'        => $items,
+];
+```
+
+---
+
+### 6.3 `acl.xml` — KHÔNG nest theo menu hierarchy
+
+**Lỗi:** "Sorry, you need permissions to view this content" dù đã grant role.
+
+**Nguyên nhân:** Nest ACL resource theo menu tree (`Magento_Backend::admin > Laybyland_Base::menu > ...`) không cần thiết và có thể gây conflict với ACL tree của module khác.
+
+**Fix:** Đặt resource trực tiếp dưới `Magento_Backend::admin`, không cần mirror menu:
+
+```xml
+<!-- SAI — nest quá sâu theo menu -->
+<resource id="Magento_Backend::admin">
+    <resource id="Laybyland_Base::menu">
+        <resource id="Laybyland_PaySquad::menu" title="PaySquad">
+            <resource id="Laybyland_PaySquad::webhook_log" title="Webhook Logs"/>
+        </resource>
+    </resource>
+</resource>
+
+<!-- ĐÚNG — flat dưới admin -->
+<resource id="Magento_Backend::admin">
+    <resource id="Laybyland_PaySquad::menu" title="PaySquad" sortOrder="60">
+        <resource id="Laybyland_PaySquad::webhook_log" title="Webhook Logs" sortOrder="10"/>
+    </resource>
+</resource>
+```
+
+Sau khi sửa `acl.xml`: vào **System > Permissions > User Roles** → grant resource cho role → Save.

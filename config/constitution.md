@@ -1,6 +1,6 @@
 # Constitution - Quy tắc phát triển chung
 
-> version: 1.1.5 | last_updated: 2026-05-04
+> version: 1.2.0 | last_updated: 2026-05-04
 
 ## Thông tin project
 
@@ -58,6 +58,10 @@
 - KHÔNG dùng `exit`, `die`, `var_dump`, `print_r` trong code chính thức
 - KHÔNG tạo bảng DB mà không có `etc/db_schema.xml` + `etc/db_schema_whitelist.json` (hai file này **phải** nằm dưới `etc/`, không đặt trong `Setup/`)
 - KHÔNG dùng `json_encode` / `json_decode` / `serialize()` / `unserialize()` PHP trực tiếp cho JSON hoặc chuỗi hóa dữ liệu nghiệp vụ — dùng `Magento\Framework\Serialize\Serializer\Json` (inject qua DI)
+- KHÔNG tạo thủ công các Factory class mà Magento tự generate (ví dụ: `ModelNameFactory`, `CollectionFactory`) — chỉ cần inject vào constructor, Magento sẽ tự tạo trong `generated/code/` khi chạy `setup:di:compile`
+- KHÔNG tạo Message Queue (communication.xml, queue_publisher.xml, queue_topology.xml, queue_consumer.xml) cho webhook handler nếu không thực sự cần async — xử lý sync trong controller là đủ cho hầu hết trường hợp
+- KHÔNG tạo `Observer/DataAssignObserver.php` + `events.xml` cho payment method nếu checkout không có form input cần lưu vào `additional_information` — PaySquad và các redirect-based payment không cần
+- KHÔNG đặt `db_schema.xml` trong `Setup/` — phải đặt trong `etc/`; sau khi tạo hoặc sửa schema phải chạy `bin/magento setup:db-declaration:generate-whitelist --module-name=<Vendor_Module>` để tạo `etc/db_schema_whitelist.json`
 
 ---
 
@@ -225,6 +229,13 @@ Task chỉ được xem là hoàn thành khi đạt đủ:
 > Quy tắc đầy đủ: xem `AGENTS.md` — mục "Hành vi chủ động".
 
 Tóm tắt: phân tích độc lập, nêu rõ requirement understanding + risks + options trước khi code, cảnh báo rủi ro, hỏi lại khi thiếu thông tin, đề xuất next best action sau mỗi bước lớn.
+
+## 16. Payment Method — Quy tắc riêng
+
+- **Redirect-based payment** (PaySquad, Afterpay, Humm...): không cần `DataAssignObserver` + `events.xml` vì không có form input ở checkout.
+- **Factory auto-generated**: `ModelNameFactory`, `CollectionFactory` — KHÔNG tạo thủ công, Magento tự generate khi `setup:di:compile`.
+- **Webhook handler**: ưu tiên xử lý sync trong controller trước. Chỉ dùng Message Queue khi có yêu cầu rõ ràng về async (ví dụ: handler chạy > 10s, hoặc cần retry độc lập).
+- **db_schema_whitelist.json**: bắt buộc generate sau mỗi lần tạo/sửa `db_schema.xml` bằng lệnh `bin/magento setup:db-declaration:generate-whitelist --module-name=<Vendor_Module>`.
 
 ## Liên kết
 
